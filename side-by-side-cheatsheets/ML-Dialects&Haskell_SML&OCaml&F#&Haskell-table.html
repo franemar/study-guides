@@ -1,0 +1,2835 @@
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th scope="col"><p>sml</p></th>
+<th scope="col"><p>ocaml</p></th>
+<th scope="col"><p>f#</p></th>
+<th scope="col"><p>haskell</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td scope="row"><p>version used<br />
+</p></td>
+<td><p>SML NJ 110</p></td>
+<td><p>4</p></td>
+<td><p>F# 3.0<br />
+Mono 3.2</p></td>
+<td><p>7.4</p></td>
+</tr>
+<tr class="even">
+<td scope="row"><p>show version<br />
+</p></td>
+<td><p>displayed at startup</p></td>
+<td><p>$ <code>ocaml -version</code></p></td>
+<td><p>$ <code>fsharpi –help</code></p></td>
+<td><p>$ <code>ghc –version</code></p></td>
+</tr>
+<tr class="odd">
+<td scope="row"><p>grammar and invocation</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td scope="row"><p>interpreter<br />
+</p></td>
+<td></td>
+<td><p>$ <code>echo 'print_endline "hello"' &gt; hello.ml</code><br />
+<br />
+$ <code>ocaml hello.ml</code></p></td>
+<td><p>$ <code>cat &lt;&lt;EOF &gt; hello.fs</code><br />
+<code>module hello</code><br />
+<code>let main = printfn "hello"</code><br />
+<code>EOF</code><br />
+<br />
+$ <code>fsharpi --quiet --exec hello.fs</code></p></td>
+<td><p>$ <code>echo 'main = putStrLn "hello"' &gt; hello.hs</code><br />
+<br />
+$ <code>runghc hello.hs</code></p></td>
+</tr>
+<tr class="even">
+<td><p>shebang</p></td>
+<td></td>
+<td><p>$ cat &lt;<EOF > hello.ml<br />
+#!/usr/bin/env ocaml<br />
+<br />
+print_endline "hello";;<br />
+EOF<br />
+<br />
+$ chmod +x hello.ml<br />
+$ ./hello.ml</p></td>
+<td><p>$ cat &lt;<EOF > hello.fs<br />
+#light (*<br />
+  exec fsharpi --exec $0 --quiet<br />
+*)<br />
+<br />
+module hello<br />
+<br />
+printfn "hello"<br />
+EOF<br />
+<br />
+$ chmod +x hello.fs<br />
+$ ./hello.fs</p></td>
+<td><p>$ cat &lt;<EOF > hello.hs<br />
+#!/usr/bin/env runghc<br />
+<br />
+main = putStrLn "hello"<br />
+EOF<br />
+<br />
+$ chmod +x hello.hs<br />
+$ ./hello.hs</p></td>
+</tr>
+<tr class="odd">
+<td><p>bytecode compiler and interpreter</p></td>
+<td></td>
+<td><p>$ echo 'print_endline "hello";;' &gt; hello.ml<br />
+$ ocamlc -o hello hello.ml<br />
+$ ocamlrun hello</p></td>
+<td><p>$ echo 'printfn "hello"' &gt; hello.fs<br />
+$ fsharpc hello.fs<br />
+$ mono hello.exe</p></td>
+<td><p>none</p></td>
+</tr>
+<tr class="even">
+<td><p>native compiler</p></td>
+<td></td>
+<td><p>$ echo 'print_endline "hello";;' &gt; hello.ml<br />
+$ ocamlopt hello.ml -o hello<br />
+$ ./hello</p></td>
+<td><p>none</p></td>
+<td><p>$ echo 'main = putStrLn "hello"' &gt; hello.hs<br />
+$ ghc -o hello hello.hs<br />
+$ ./hello</p></td>
+</tr>
+<tr class="odd">
+<td><p>library which is always imported</p></td>
+<td></td>
+<td><p>Pervasives</p></td>
+<td><p>Core</p></td>
+<td><p>Prelude</p></td>
+</tr>
+<tr class="even">
+<td><p>statement terminator</p></td>
+<td><p>;</p></td>
+<td><p>;;</p></td>
+<td><p>;;</p></td>
+<td><p>next line has equal or less indentation, or ;</p></td>
+</tr>
+<tr class="odd">
+<td><p>blocks</p></td>
+<td><p>( expr ; … )</p></td>
+<td><p>( expr ; … )<br />
+begin expr ; … end</p></td>
+<td><p>( expr ; … )<br />
+begin expr ; … end</p></td>
+<td><p>offside rule or { }</p></td>
+</tr>
+<tr class="even">
+<td><p>end-of-line comment</p></td>
+<td><p>none</p></td>
+<td><p>none</p></td>
+<td><p>// comment</p></td>
+<td><p>-- comment</p></td>
+</tr>
+<tr class="odd">
+<td><p>multiple line comment</p></td>
+<td><p>(* comment<br />
+another comment *)</p></td>
+<td><p>(* comment<br />
+another comment *)</p></td>
+<td><p>(* comment<br />
+another comment *)</p></td>
+<td><p>{- comment<br />
+another comment -}</p></td>
+</tr>
+<tr class="even">
+<td><p>variables and expressions</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="even">
+<td><p>write-once variable<br />
+</p></td>
+<td><p>val a = 3;</p></td>
+<td><p>let n = 1 + 2;;</p></td>
+<td><p>let n = 1 + 2</p></td>
+<td><p>n = 3</p></td>
+</tr>
+<tr class="odd">
+<td><p>modifiable variable</p></td>
+<td><p>val a = ref 3;<br />
+a := 4;<br />
+!a + 7;</p></td>
+<td><p>let n = ref 3;;<br />
+n := 4;;<br />
+!n + 7;;</p></td>
+<td><p>let n = ref 3<br />
+n := 4<br />
+!n + 7</p></td>
+<td><p>n &lt;- return 3</p></td>
+</tr>
+<tr class="even">
+<td><p>unit type and value</p></td>
+<td><p>unit<br />
+()</p></td>
+<td><p>unit<br />
+()</p></td>
+<td><p>unit<br />
+()</p></td>
+<td><p>()<br />
+()</p></td>
+</tr>
+<tr class="odd">
+<td><p>conditional expression</p></td>
+<td><p>val x = 3;<br />
+if x &lt; 0 then ~x else x;</p></td>
+<td><p>let n = -3;;<br />
+let absn = if n &lt; 0 then -n else n;;</p></td>
+<td><p>let n = -3<br />
+let absn = if n &lt; 0 then -n else n</p></td>
+<td><p>n = -3<br />
+let absn = if n &lt; 0 then -n else n</p></td>
+</tr>
+<tr class="even">
+<td><p>branch type mismatch</p></td>
+<td><p>(* compilation error: *)<br />
+if true then "hello" else 3;</p></td>
+<td><p>(* compilation error: *)<br />
+if true then "hello" else 3;;</p></td>
+<td><p>(* compilation error: *)<br />
+if true then "hello" else 3</p></td>
+<td><p>-- compilation error:<br />
+if True then "hello" else 3</p></td>
+</tr>
+<tr class="odd">
+<td><p>null<br />
+</p></td>
+<td><p>NONE</p></td>
+<td><p>None</p></td>
+<td><p>None<br />
+<br />
+Also this value returned by .NET library functions. It has a type
+distinct from None:<br />
+null</p></td>
+<td><p>Nothing</p></td>
+</tr>
+<tr class="even">
+<td><p>nullable type</p></td>
+<td><p>type list_option_int = int option list;<br />
+<br />
+val list = [SOME 3,NONE, SOME ~4];</p></td>
+<td><p>type list_option_int = int option list;;<br />
+<br />
+let list = [Some 3; None; Some (-4)];;</p></td>
+<td></td>
+<td><p>list = [Just(3), Nothing, Just(-4)]</p></td>
+</tr>
+<tr class="odd">
+<td><p>null test</p></td>
+<td></td>
+<td><p>match foo with<br />
+  | None -&gt; true<br />
+  | _ -&gt; false;;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>coalesce</p></td>
+<td><p>val foo = SOME 3;<br />
+<br />
+(* raises exception if NONE: *)<br />
+valOf foo;<br />
+<br />
+(* evaluates to 0 if NONE: *)<br />
+getOpt (foo, 0);</p></td>
+<td><p>match foo with<br />
+  | None -&gt; 0<br />
+  | Some n -&gt; n;;</p></td>
+<td></td>
+<td><p>import Data.Maybe<br />
+<br />
+let foo = Just(3)<br />
+raises exception if Nothing:<br />
+fromJust foo<br />
+<br />
+let intId x = x<br />
+evaluates to 0 if Nothing:<br />
+maybe 0 intId foo</p></td>
+</tr>
+<tr class="odd">
+<td><p>nullif</p></td>
+<td></td>
+<td><p>match foo with<br />
+  | -999 -&gt; None<br />
+  | n -&gt; Some n;;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>expression type declaration</p></td>
+<td></td>
+<td><p>float 1</p></td>
+<td><p>float 1</p></td>
+<td><p>1 :: Double</p></td>
+</tr>
+<tr class="odd">
+<td><p>let ... in ...</p></td>
+<td><p>val z =<br />
+let<br />
+  val x = 3.0<br />
+  val y = 2.0 * x<br />
+in<br />
+  x * y<br />
+end;</p></td>
+<td><p>let z =<br />
+  let x = 3.0 in<br />
+  let y = 2.0 *. x in<br />
+  x *. y;;</p></td>
+<td><p>let z =<br />
+  let x = 3.0 in<br />
+  let y = 2.0 * x in<br />
+  x * y</p></td>
+<td><p>z = let x = 3.0<br />
+        y = 2.0 * x<br />
+    in x * y</p></td>
+</tr>
+<tr class="even">
+<td><p>where</p></td>
+<td><p>none</p></td>
+<td><p>none</p></td>
+<td><p>none</p></td>
+<td><p>z = x * y<br />
+  where x = 3.0<br />
+        y = 2.0 * x</p></td>
+</tr>
+<tr class="odd">
+<td><p>arithmetic and logic</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td><p>boolean type<br />
+</p></td>
+<td><p>bool</p></td>
+<td><p>bool</p></td>
+<td><p>bool</p></td>
+<td><p>Bool</p></td>
+</tr>
+<tr class="even">
+<td><p>true and false<br />
+</p></td>
+<td><p>true false</p></td>
+<td><p>true false</p></td>
+<td><p>true false</p></td>
+<td><p>True False</p></td>
+</tr>
+<tr class="odd">
+<td><p>logical operators</p></td>
+<td><p>andalso orelse not</p></td>
+<td><p>&amp;&amp; </p></td>
+<td><p> not</p></td>
+<td><p>&amp;&amp; </p></td>
+</tr>
+<tr class="even">
+<td><p>relational operators</p></td>
+<td><p>Err:510</p></td>
+<td><p>Err:510</p></td>
+<td><p>Err:510</p></td>
+<td><p>Err:510</p></td>
+</tr>
+<tr class="odd">
+<td><p>min and max</p></td>
+<td></td>
+<td><p>min 1 2<br />
+max 1 2</p></td>
+<td><p>min 1 2<br />
+max 1 2</p></td>
+<td><p>min 1 2<br />
+max 1 2</p></td>
+</tr>
+<tr class="even">
+<td><p>integer type</p></td>
+<td><p>int</p></td>
+<td><p>int<br />
+<br />
+other integer types:<br />
+int32 int64 nativeint</p></td>
+<td><p>int<br />
+<br />
+other integer types:<br />
+int32 int64 nativeint</p></td>
+<td><p>Integer</p></td>
+</tr>
+<tr class="odd">
+<td><p>integer literal</p></td>
+<td><p>negative integer:<br />
+~4</p></td>
+<td><p>int, int64, and nativeint literals:<br />
+12 12L 12n<br />
+<br />
+literals can contain underscores:<br />
+1_000_000<br />
+<br />
+this parses as an expression:<br />
+-4</p></td>
+<td><p>-4</p></td>
+<td><p>an expression, not a literal:<br />
+-4</p></td>
+</tr>
+<tr class="even">
+<td><p>float type</p></td>
+<td><p>real</p></td>
+<td><p>float</p></td>
+<td><p>float</p></td>
+<td><p>Double</p></td>
+</tr>
+<tr class="odd">
+<td><p>integer operators</p></td>
+<td><p>+ - * div mod</p></td>
+<td><p>+ - * / mod<br />
+mod //is an infix operator</p></td>
+<td><p>+ - * / %</p></td>
+<td><p>+ - * div rem<br />
+div and rem are functions, not infix operators</p></td>
+</tr>
+<tr class="even">
+<td><p>float operators<br />
+</p></td>
+<td><p>+ - * /</p></td>
+<td><p>+. -. *. /.</p></td>
+<td><p>+ - * /</p></td>
+<td><p>+ - * /</p></td>
+</tr>
+<tr class="odd">
+<td><p>add integer and float</p></td>
+<td><p>real 3 + 7.0;</p></td>
+<td><p>float 3 +. 7.0</p></td>
+<td><p>float 3 + 7.0</p></td>
+<td><p>3 + 7.0</p></td>
+</tr>
+<tr class="even">
+<td><p>integer division<br />
+and remainder</p></td>
+<td><p>7 div 3<br />
+7 mod 3<br />
+real 7 / real 3</p></td>
+<td><p>7 / 3<br />
+7 mod 3</p></td>
+<td><p>7 / 3<br />
+7 % 3</p></td>
+<td><p>div 7 3<br />
+rem 7 3</p></td>
+</tr>
+<tr class="odd">
+<td><p>integer division by zero</p></td>
+<td></td>
+<td><p>raises Division_by_zero</p></td>
+<td><p>System.DivideByZeroException</p></td>
+<td><p>Exception: divide by zero</p></td>
+</tr>
+<tr class="even">
+<td><p>float division<br />
+</p></td>
+<td></td>
+<td><p>float 7 /. float 3</p></td>
+<td><p>float 7 / float 3</p></td>
+<td><p>7 / 3</p></td>
+</tr>
+<tr class="odd">
+<td><p>float division by zero</p></td>
+<td></td>
+<td><p>infinity nan or neg_infinity</p></td>
+<td><p>infinity nan or neg_infinity</p></td>
+<td><p>evaluates to Infinity, NaN, or -Infinity, values which do not
+have literals</p></td>
+</tr>
+<tr class="even">
+<td><p>power</p></td>
+<td><p>Math.pow (2.0, 32.0);</p></td>
+<td><p>2.0 ** 32.0</p></td>
+<td><p>2.0 ** 32.0</p></td>
+<td><p>2 ** 32<br />
+<br />
+-- syntax error if exponent not an integer:<br />
+2 ^ 32</p></td>
+</tr>
+<tr class="odd">
+<td><p>sqrt<br />
+</p></td>
+<td><p>Math.sqrt 2.0</p></td>
+<td><p>sqrt 2.0</p></td>
+<td><p>sqrt 2.0</p></td>
+<td><p>sqrt 2</p></td>
+</tr>
+<tr class="even">
+<td><p>sqrt -1</p></td>
+<td><p>Math.sqrt ~1.0 evaluates to nan</p></td>
+<td><p>sqrt (-1.0):<br />
+nan</p></td>
+<td><p>nan</p></td>
+<td><p>sqrt (-1) evaluates to NaN, a value which has no literal</p></td>
+</tr>
+<tr class="odd">
+<td><p>transcendental functions</p></td>
+<td><p>Math.exp Math.ln<br />
+Math.sin Math.cos Math.tan<br />
+Math.asin Math.acos Math.atan<br />
+Math.atan2</p></td>
+<td><p>exp log<br />
+sin cos tan<br />
+asin acos atan<br />
+atan2</p></td>
+<td><p>exp log<br />
+sin cos tan<br />
+asin acos atan<br />
+atan2</p></td>
+<td><p>exp log<br />
+sin cos tan<br />
+asin acos atan<br />
+atan2</p></td>
+</tr>
+<tr class="even">
+<td><p>transcendental constants</p></td>
+<td><p>Math.pi<br />
+Math.e</p></td>
+<td><p>4.0 *. atan 1.0<br />
+exp 1.0</p></td>
+<td><p>System.Math.PI<br />
+System.Math.E</p></td>
+<td><p>pi<br />
+exp 1</p></td>
+</tr>
+<tr class="odd">
+<td><p>float truncation</p></td>
+<td><p>round 3.14<br />
+trunc 3.14<br />
+floor 3.14<br />
+ceil 3.14</p></td>
+<td><p>truncate 3.14<br />
+none<br />
+floor 3.14 returns float<br />
+ceil 3.14 returns float</p></td>
+<td><p>truncate 3.14<br />
+round 3.14<br />
+floor 3.14 returns float<br />
+ceil 3.14 returns float</p></td>
+<td><p>truncate 3.14<br />
+round 3.14<br />
+floor 3.14<br />
+ceiling 3.14</p></td>
+</tr>
+<tr class="even">
+<td><p>absolute value<br />
+and signum</p></td>
+<td></td>
+<td><p>abs (-7)<br />
+abs_float (-7.0)<br />
+no signum</p></td>
+<td><p>abs -7<br />
+abs -7.0<br />
+sign -7<br />
+sign -7.0</p></td>
+<td><p>abs (-7)<br />
+signum (-7)</p></td>
+</tr>
+<tr class="odd">
+<td><p>integer overflow</p></td>
+<td><p>Overflow exception</p></td>
+<td><p>modular arithmetic</p></td>
+<td><p>modular arithmetic</p></td>
+<td><p>has arbitrary length integers</p></td>
+</tr>
+<tr class="even">
+<td><p>float overflow</p></td>
+<td></td>
+<td><p>infinity</p></td>
+<td><p>infinity</p></td>
+<td><p>evaluates to Infinity, a value which has no literal</p></td>
+</tr>
+<tr class="odd">
+<td><p>arbitrary length integer</p></td>
+<td></td>
+<td><p>open Big_int;;<br />
+<br />
+let n = big_int_of_int 7;;<br />
+let m = big_int_of_int 12;;</p></td>
+<td><p>// System.Numerics.BigInteger:<br />
+let n = 7I<br />
+let m = 12I</p></td>
+<td><p>-- Integer is arbitrary length type:<br />
+let n = 7<br />
+let m = 12</p></td>
+</tr>
+<tr class="even">
+<td><p>arbitrary length integer operators</p></td>
+<td></td>
+<td><p>add_big_int n m<br />
+sub_big_int n m<br />
+mult_big_int n m<br />
+div_big_int n m (* quotient *)<br />
+mod_big_int n m<br />
+<br />
+eq_big_int n m<br />
+lt_big_int n m<br />
+gt_big_int n m<br />
+le_big_int n m<br />
+ge_big_int n m</p></td>
+<td><p>n + m<br />
+n - m<br />
+n * m<br />
+n / m<br />
+n % m<br />
+<br />
+n = m<br />
+n &lt; m<br />
+n &lt; m<br />
+n &lt;= m<br />
+n &gt;= m</p></td>
+<td><p>n + m<br />
+n - m<br />
+n * m<br />
+div n m<br />
+mod n m<br />
+<br />
+n == m<br />
+n &lt; m<br />
+n &lt; m<br />
+n &lt;= m<br />
+n &gt;= m</p></td>
+</tr>
+<tr class="odd">
+<td><p>rational type</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>Ratio Integer</p></td>
+</tr>
+<tr class="even">
+<td><p>rational construction</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>import Data.Ratio<br />
+<br />
+1 % 7</p></td>
+</tr>
+<tr class="odd">
+<td><p>rational decomposition</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>import Data.Ratio<br />
+<br />
+numerator (1 % 7)<br />
+denominator (1 % 7)</p></td>
+</tr>
+<tr class="even">
+<td><p>complex type</p></td>
+<td></td>
+<td><p>Complex.t</p></td>
+<td></td>
+<td><p>Complex Double</p></td>
+</tr>
+<tr class="odd">
+<td><p>complex constants</p></td>
+<td></td>
+<td><p>Complex.zero<br />
+Complex.one<br />
+Complex.i</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>complex operators</p></td>
+<td></td>
+<td><p>Complex.add z w;;<br />
+Complex.sub z w;;<br />
+Complex.mul z w;;<br />
+Complex.div z w;;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>complex construction</p></td>
+<td></td>
+<td><p>{Complex.re=1.0; Complex.im=2.0}</p></td>
+<td><p>System.Numerics.Complex(1.0, 2.0)</p></td>
+<td><p>import Data.Complex<br />
+<br />
+1 :+ 2.0</p></td>
+</tr>
+<tr class="even">
+<td><p>complex decomposition</p></td>
+<td></td>
+<td><p>let z = {Complex.re=1.0; Complex.im=2.0};;<br />
+<br />
+z.Complex.re;;<br />
+z.Complex.im;;<br />
+Complex.arg z;;<br />
+Complex.norm z;;<br />
+Complex.conj z;;</p></td>
+<td></td>
+<td><p>import Data.Complex<br />
+<br />
+realPart (1 :+ 2)<br />
+imagPart (1 :+ 2)<br />
+phase (1 :+ 2)<br />
+magnitude (1 :+ 2)<br />
+conjugate (1 :+ 2)</p></td>
+</tr>
+<tr class="odd">
+<td><p>random number<br />
+uniform int, uniform float, normal float</p></td>
+<td></td>
+<td><p>Random.int 100<br />
+Random.float 1.0<br />
+none</p></td>
+<td><p>let rnd = System.Random()<br />
+<br />
+rnd.Next(0, 100)<br />
+rnd.NextDouble()<br />
+none</p></td>
+<td><p>-- $ cabal install random<br />
+import System.Random<br />
+<br />
+getStdRandom (randomR (0, 99))<br />
+getStdRandom (randomR (0.0, 1.0))<br />
+none</p></td>
+</tr>
+<tr class="even">
+<td><p>random seed<br />
+set, get, restore</p></td>
+<td></td>
+<td><p>Random.init 17;;<br />
+let seed = Random.get_state();;<br />
+Random.set_state seed;;</p></td>
+<td><p>let rnd = System.Random(17)<br />
+none<br />
+none</p></td>
+<td><p>-- $ cabal install random<br />
+import System.Random<br />
+<br />
+setStdGen $ mkStdGen 17<br />
+seed &lt;- getStdGen<br />
+setStdGen seed</p></td>
+</tr>
+<tr class="odd">
+<td><p>bit operators</p></td>
+<td></td>
+<td><p>1 lsl 4<br />
+1 lsr 4<br />
+1 land 3<br />
+1 lor 3<br />
+1 lxor 3<br />
+lnot 1</p></td>
+<td><p>1 &lt;&lt;&lt; 4<br />
+1 &gt;&gt;&gt; 4<br />
+1 &amp;&amp;&amp; 3<br />
+1 </p></td>
+<td><p>| 3<br />
+1 ^^^ 3<br />
+~~~ 1</p></td>
+</tr>
+<tr class="even">
+<td><p>binary, octal, and hex literals</p></td>
+<td></td>
+<td><p>0b101010<br />
+0o52<br />
+0x2a</p></td>
+<td><p>0b101010<br />
+0o52<br />
+0x2a</p></td>
+<td><p>none<br />
+052<br />
+0x2a</p></td>
+</tr>
+<tr class="odd">
+<td><p>radix</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>strings</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="even">
+<td><p>string type<br />
+</p></td>
+<td><p>string</p></td>
+<td><p>string</p></td>
+<td><p>string</p></td>
+<td><p>String</p></td>
+</tr>
+<tr class="odd">
+<td><p>string literal<br />
+</p></td>
+<td><p>"Hello, World!"</p></td>
+<td><p>"Hello, World!"</p></td>
+<td><p>"Hello, World!"</p></td>
+<td><p>"Hello, World!"</p></td>
+</tr>
+<tr class="even">
+<td><p>newline in literal</p></td>
+<td></td>
+<td><p>no</p></td>
+<td><p>yes</p></td>
+<td><p>no</p></td>
+</tr>
+<tr class="odd">
+<td><p>literal escapes</p></td>
+<td><p>\000 \a \b \f \n \r \t \v \040</p></td>
+<td><p>\b \n \r \t \" \' \\<br />
+\ooo \xhh</p></td>
+<td><p>\b \n \r\ t \" \' \\<br />
+\uhhhh \Uhhhhhhhh</p></td>
+<td><p>\a \b \f \n \r \t \v \" \&amp; \' \\<br />
+\oo... \d... \xh...<br />
+<br />
+Octal, decimal, and hex escapes denote Unicode characters and can
+contain anywhere from 1 to 7 digits. The max values are \o4177777,
+\1114111, and \x10ffff. The \&amp; escape does not represent a
+character, but can separate a numeric backslash escape sequence from a
+following digit.</p></td>
+</tr>
+<tr class="even">
+<td><p>format string</p></td>
+<td></td>
+<td></td>
+<td><p>sprintf "foo %s %d %.2f" "bar" 7 3.1415</p></td>
+<td><p>import Text.Printf<br />
+<br />
+printf "foo %s %d %.2f" "bar" 7 3.1415</p></td>
+</tr>
+<tr class="odd">
+<td><p>concatenate<br />
+</p></td>
+<td><p>"Hello" ^ ", " ^ "World!"</p></td>
+<td><p>"Hello" ^ ", " ^ "World!"</p></td>
+<td><p>"Hello" + ", " + "World!"</p></td>
+<td><p>"Hello" ++ ", " ++ "World!"</p></td>
+</tr>
+<tr class="even">
+<td><p>replicate<br />
+</p></td>
+<td></td>
+<td><p>String.make 80 '-'</p></td>
+<td><p>String.replicate 80 "-"</p></td>
+<td><p>concat ( replicate 80 "-" )</p></td>
+</tr>
+<tr class="odd">
+<td><p>translate case<br />
+to upper, to lower</p></td>
+<td></td>
+<td><p>String.uppercase "hello"<br />
+String.lowercase "HELLO"</p></td>
+<td><p>"hello".ToUpper()<br />
+"HELLO".ToLower()</p></td>
+<td><p>import Data.Char<br />
+<br />
+map toUpper "hello"<br />
+map toLower "HELLO"</p></td>
+</tr>
+<tr class="even">
+<td><p>capitalize<br />
+</p></td>
+<td></td>
+<td><p>String.capitalize "hello"</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>trim<br />
+both sides, left, right</p></td>
+<td></td>
+<td><p>String.trim " hello "</p></td>
+<td><p>" hello ".Trim()<br />
+" hello".TrimStart()<br />
+"hello ".TrimEnd()</p></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>pad<br />
+on left, on right</p></td>
+<td></td>
+<td></td>
+<td><p>"hello".PadLeft(10, ' ')<br />
+"hello".PadRight(10, ' ')</p></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>number to string</p></td>
+<td></td>
+<td><p>"two: " ^ string_of_int 2<br />
+"pi: " ^ float_of_string 3.14</p></td>
+<td><p>"two: " + string 2<br />
+"pi: " + string 3.14</p></td>
+<td><p>"two: " ++ (show 2)<br />
+"pi: " ++ (show 3.14)</p></td>
+</tr>
+<tr class="even">
+<td><p>string to number</p></td>
+<td><p>Int.toString 3<br />
+Real.toString 3.14</p></td>
+<td><p>7 + int_of_string "12"<br />
+73.9 +. float_of_string ".037"</p></td>
+<td><p>7 + int "12"<br />
+73.9 + float ".037</p></td>
+<td><p>7 + (read "12")::Integer<br />
+73.9 + (read "0.037")::Double<br />
+raises exception if string doesn't completely parse</p></td>
+</tr>
+<tr class="odd">
+<td><p>join<br />
+</p></td>
+<td></td>
+<td></td>
+<td><p>System.String.Join(" ", ["do"; "re"; "mi"])</p></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>split<br />
+</p></td>
+<td></td>
+<td></td>
+<td><p>"do re mi".Split(' ')</p></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>character type<br />
+</p></td>
+<td><p>char</p></td>
+<td><p>char</p></td>
+<td><p>char</p></td>
+<td><p>Char</p></td>
+</tr>
+<tr class="even">
+<td><p>character literal</p></td>
+<td><p>#"h"</p></td>
+<td><p>'h'</p></td>
+<td><p>'h'</p></td>
+<td><p>'h'</p></td>
+</tr>
+<tr class="odd">
+<td><p>length<br />
+</p></td>
+<td><p>size "hello"</p></td>
+<td><p>String.length "hello"</p></td>
+<td><p>"hello".Length</p></td>
+<td><p>length "hello"</p></td>
+</tr>
+<tr class="even">
+<td><p>index of substring</p></td>
+<td></td>
+<td></td>
+<td><p>"hello".IndexOf("hell")</p></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>extract substring</p></td>
+<td><p>substring ("hello",0,4)</p></td>
+<td><p>String.sub "hello" 0 4</p></td>
+<td><p>"hello".Substring(0, 4)</p></td>
+<td><p>drop 0 (take 4 "hello")</p></td>
+</tr>
+<tr class="even">
+<td><p>extract character</p></td>
+<td><p>String.sub ("hello", 0)</p></td>
+<td><p>"hello".[0]</p></td>
+<td><p>"hello".[0]</p></td>
+<td><p>"hello"</p></td>
+</tr>
+<tr class="odd">
+<td><p>chr and ord</p></td>
+<td><p>ord #"a"<br />
+chr 97</p></td>
+<td><p>Char.code 'a'<br />
+Char.chr 97</p></td>
+<td><p>int 'a'<br />
+char 97</p></td>
+<td><p>Char.ord 'a'<br />
+Char.chr 97</p></td>
+</tr>
+<tr class="even">
+<td><p>dates and time</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="even">
+<td><p>date and time types</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>ClockTime CalendarTime TimeDiff</p></td>
+</tr>
+<tr class="odd">
+<td><p>current date and time</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>import Time<br />
+<br />
+t &lt;- getClockTime</p></td>
+</tr>
+<tr class="even">
+<td><p>current unix epoch</p></td>
+<td></td>
+<td><p>open Unix;;<br />
+<br />
+(* float: *)<br />
+time();;</p></td>
+<td></td>
+<td><p>import System.Time<br />
+<br />
+getClockTime &gt;&gt;= (\(TOD sec _) -&gt; return sec)</p></td>
+</tr>
+<tr class="odd">
+<td><p>arrays</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td><p>literal</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>size</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>lookup</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>update</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>out-of-bounds</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>lists</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="even">
+<td><p>literal</p></td>
+<td><p>[1, 2, 3]</p></td>
+<td><p>[1; 2; 3]</p></td>
+<td><p>[1; 2; 3]</p></td>
+<td><p>[1, 2, 3]</p></td>
+</tr>
+<tr class="odd">
+<td><p>empty list<br />
+</p></td>
+<td></td>
+<td><p>[]</p></td>
+<td></td>
+<td><p>[]</p></td>
+</tr>
+<tr class="even">
+<td><p>empty list test</p></td>
+<td></td>
+<td><p>let list = [1; 2; 3];;<br />
+<br />
+list == []</p></td>
+<td></td>
+<td><p>let list = [1, 2, 3]<br />
+<br />
+list == []<br />
+null list</p></td>
+</tr>
+<tr class="odd">
+<td><p>cons<br />
+</p></td>
+<td><p>1 :: [2, 3]</p></td>
+<td><p>1 :: [2; 3]</p></td>
+<td><p>1 :: [2; 3]</p></td>
+<td><p>1 : [2, 3]</p></td>
+</tr>
+<tr class="even">
+<td><p>head<br />
+</p></td>
+<td><p>List.hd [1, 2, 3]</p></td>
+<td><p>List.hd [1; 2; 3]</p></td>
+<td><p>List.head [1; 2; 3]</p></td>
+<td><p>head [1, 2, 3]</p></td>
+</tr>
+<tr class="odd">
+<td><p>tail<br />
+</p></td>
+<td><p>List.tl [1, 2, 3]</p></td>
+<td><p>List.tl [1; 2; 3]</p></td>
+<td><p>List.tail [1; 2; 3]</p></td>
+<td><p>tail [1, 2, 3]</p></td>
+</tr>
+<tr class="even">
+<td><p>head and tail of empty list</p></td>
+<td></td>
+<td><p>exceptions</p></td>
+<td></td>
+<td><p>exceptions</p></td>
+</tr>
+<tr class="odd">
+<td><p>length<br />
+</p></td>
+<td><p>List.length [1, 2, 3]</p></td>
+<td><p>List.length [1; 2; 3]</p></td>
+<td><p>List.length [1; 2; 3]</p></td>
+<td><p>length [1, 2, 3]</p></td>
+</tr>
+<tr class="even">
+<td><p>nth element<br />
+</p></td>
+<td><p>List.nth ([1, 2, 3], 0)</p></td>
+<td><p>List.nth [1; 2; 3] 0</p></td>
+<td><p>List.nth [1; 2; 3] 0</p></td>
+<td><p>[1, 2, 3]</p></td>
+</tr>
+<tr class="odd">
+<td><p>element index</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>import Data.list<br />
+<br />
+-- Just 1:<br />
+elemIndex 8 [7, 8, 9]<br />
+<br />
+-- Nothing:<br />
+elemIndex 10 [7, 8, 9]</p></td>
+</tr>
+<tr class="even">
+<td><p>update</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>concatenate<br />
+two lists, list of lists</p></td>
+<td><p>[1, 2] @ [3, 4]<br />
+List.concat [[1, 2], [3, 4]]</p></td>
+<td><p>[1; 2] @ [3; 4]<br />
+List.append [1; 2] [3; 4]<br />
+<br />
+List.concat [[1; 2]; [3; 4]]</p></td>
+<td><p>[1; 2] @ [3; 4]<br />
+List.append [1; 2] [3; 4]<br />
+<br />
+List.concat [[1; 2]; [3; 4]]</p></td>
+<td><p>[1, 2] ++ [3, 4]<br />
+<br />
+concat [[1, 2], [3, 4]]</p></td>
+</tr>
+<tr class="even">
+<td><p>last<br />
+and butlast</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>last [1, 2, 3]<br />
+init [1, 2, 3]</p></td>
+</tr>
+<tr class="odd">
+<td><p>take<br />
+</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>take 2 [1, 2, 3]</p></td>
+</tr>
+<tr class="even">
+<td><p>drop<br />
+</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>drop 2 [1, 2, 3]</p></td>
+</tr>
+<tr class="odd">
+<td><p>iterate</p></td>
+<td><p>fun f i = print ((Int.toString i) ^ "\n");<br />
+List.app f [1, 2, 3];</p></td>
+<td><p>let f i =<br />
+  print_endline (string_of_int i);;<br />
+<br />
+List.iter f [1; 2; 3];;</p></td>
+<td><p>let f i =<br />
+  System.Console.WriteLine(string i)<br />
+<br />
+List.iter f [1; 2; 3]</p></td>
+<td><p>mapM_ print [1, 2, 3]</p></td>
+</tr>
+<tr class="even">
+<td><p>reverse<br />
+</p></td>
+<td><p>List.rev [1, 2, 3]</p></td>
+<td><p>List.rev [1; 2; 3]</p></td>
+<td><p>List.rev [1; 2; 3]</p></td>
+<td><p>reverse [1, 2, 3]</p></td>
+</tr>
+<tr class="odd">
+<td><p>sort</p></td>
+<td></td>
+<td><p>List.sort min [1; 3; 2; 4]<br />
+List.sort max [1; 3; 2; 4]</p></td>
+<td><p>List.sort [1; 3; 2; 4]</p></td>
+<td><p>import Data.List<br />
+<br />
+sort [1, 3, 2, 4]</p></td>
+</tr>
+<tr class="even">
+<td><p>map</p></td>
+<td><p>List.map (fn (x) =&gt; x + 2) [1, 2, 3];</p></td>
+<td><p>List.map (( * ) 2) [1; 2; 3]</p></td>
+<td><p>List.map (( * ) 2) [1; 2; 3]</p></td>
+<td><p>map (\x -&gt; x * x) [1, 2, 3]</p></td>
+</tr>
+<tr class="odd">
+<td><p>filter<br />
+</p></td>
+<td><p>List.filter (fn (x) =&gt; x &gt; 2) [1, 2, 3];</p></td>
+<td><p>List.filter ((&lt;) 2) [1; 2; 3]</p></td>
+<td><p>List.filter ((&lt;) 2) [1; 2; 3]</p></td>
+<td><p>filter (\x -&gt; x &gt; 2) [1, 2, 3]</p></td>
+</tr>
+<tr class="even">
+<td><p>fold from left</p></td>
+<td><p>List.foldl (op +) 0 [1, 2, 3];</p></td>
+<td><p>List.fold_left (+) 0 [1; 2; 3]</p></td>
+<td><p>List.fold (-) 0 [1; 2; 3]</p></td>
+<td><p>foldl (+) 0 [1, 2, 3]</p></td>
+</tr>
+<tr class="odd">
+<td><p>fold from right<br />
+</p></td>
+<td></td>
+<td><p>List.fold_right (-) [1; 2; 3] 0</p></td>
+<td><p>List.foldr (op -) 0 [1, 2, 3];</p></td>
+<td><p>foldr (-) 0 [1, 2, 3]</p></td>
+</tr>
+<tr class="even">
+<td><p>membership<br />
+</p></td>
+<td></td>
+<td><p>List.mem 3 [1; 2; 3]</p></td>
+<td></td>
+<td><p>elem 3 [1, 2, 3]</p></td>
+</tr>
+<tr class="odd">
+<td><p>universal test<br />
+</p></td>
+<td></td>
+<td><p>List.for_all (fun x -&gt; x &gt; 2) [1; 2; 3];;</p></td>
+<td><p>List.forall (fun x -&gt; x &gt; 2) [1; 2; 3]</p></td>
+<td><p>all (\x -&gt; x &gt; 2) [1, 2, 3]</p></td>
+</tr>
+<tr class="even">
+<td><p>existential test<br />
+</p></td>
+<td></td>
+<td><p>List.exists (fun x -&gt; x &gt; 2) [1; 2; 3];;</p></td>
+<td><p>List.exists (fun x -&gt; x &gt; 2) [1; 2; 3]</p></td>
+<td><p>any (\x -&gt; x &gt; 2) [1, 2, 3]</p></td>
+</tr>
+<tr class="odd">
+<td><p>zip lists</p></td>
+<td></td>
+<td><p>(* list of tuples *)<br />
+List.combine [1; 2; 3] ['a'; 'b'; 'c']</p></td>
+<td></td>
+<td><p>-- list of tuples:<br />
+zip [1, 2, 3] ['a', 'b', 'c']</p></td>
+</tr>
+<tr class="even">
+<td><p>tuples</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="even">
+<td><p>literal</p></td>
+<td><p>(1, "hello", true)</p></td>
+<td><p>(1, "hello", true)</p></td>
+<td><p>(1, "hello", true)</p></td>
+<td><p>(1, "hello", True)</p></td>
+</tr>
+<tr class="odd">
+<td><p>lookup</p></td>
+<td><p>#1 (1, "hello", true)</p></td>
+<td><p>match (1, "hello", true) with _, x, _ -&gt; x</p></td>
+<td><p>match (1, "hello", true) with _, x, _ -&gt; x</p></td>
+<td><p>(\(a, _, _) -&gt; a) (1, "hello", True)</p></td>
+</tr>
+<tr class="even">
+<td><p>pair lookup</p></td>
+<td><p>#1 (12,"December")<br />
+#2 (12,"December")</p></td>
+<td><p>fst (12, "December")<br />
+snd (12, "December")</p></td>
+<td><p>fst (12, "December")<br />
+snd (12, "December")</p></td>
+<td><p>fst (12, "December")<br />
+snd (12, "December")</p></td>
+</tr>
+<tr class="odd">
+<td><p>dictionaries</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td><p>functions</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td><p>define function</p></td>
+<td><p>fun average a b = ( a + b ) / 2.0;</p></td>
+<td><p>let average a b = ( a +. b ) /. 2.0;;</p></td>
+<td><p>let average a b = ( a + b ) / 2.0</p></td>
+<td><p>average a b = (a + b) / 2.0</p></td>
+</tr>
+<tr class="even">
+<td><p>invoke function</p></td>
+<td></td>
+<td><p>(* 4.5: *)<br />
+average 1.0 2.0 +. 3.0;;<br />
+<br />
+(* 3.0: *)<br />
+average 1.0 (2.0 +. 3.0);;</p></td>
+<td><p>// 4.5:<br />
+average 1.0 2.0 + 3.0<br />
+<br />
+// 3.0:<br />
+average 1.0 (2.0 + 3.0)</p></td>
+<td><p>-- 4.5:<br />
+average 1 2 + 3<br />
+<br />
+-- 3.0:<br />
+average 1 (2 + 3)<br />
+average 1 $ 2 + 3</p></td>
+</tr>
+<tr class="odd">
+<td><p>named parameter</p></td>
+<td></td>
+<td><p>let subtract ~m ~s = m - s;;<br />
+<br />
+subtract ~s: 3 ~m: 7;;</p></td>
+<td></td>
+<td><p>none</p></td>
+</tr>
+<tr class="even">
+<td><p>named parameter default value</p></td>
+<td></td>
+<td><p>let logarithm ?(base = (exp 1.0)) x = log x /. (log base);;<br />
+<br />
+logarithm 2.718;;<br />
+logarithm ~base: 2.0 10.0;;</p></td>
+<td></td>
+<td><p>none</p></td>
+</tr>
+<tr class="odd">
+<td><p>piecewise defined function</p></td>
+<td><p>val to_s = fn Red =&gt; "red"<br />
+  | Green =&gt; "green"<br />
+  | Blue =&gt; "blue";</p></td>
+<td><p>let to_s = function Red -&gt; "red"<br />
+  | Green -&gt; "green"<br />
+  | Blue -&gt; "blue";;</p></td>
+<td></td>
+<td><p>to_s Red = "red"<br />
+to_s Green = "green"<br />
+to_s Blue = "blue"</p></td>
+</tr>
+<tr class="even">
+<td><p>recursive function</p></td>
+<td><p>fun range a b =<br />
+  if a &gt; b then []<br />
+  else a :: range (a + 1) b;</p></td>
+<td><p>let rec range a b =<br />
+if a &gt; b then []<br />
+else a :: range (a+1) b;;</p></td>
+<td></td>
+<td><p>range a b = if a &gt; b then [] else a : range (a+1) b</p></td>
+</tr>
+<tr class="odd">
+<td><p>mutually-recursive-functions</p></td>
+<td></td>
+<td><p>let rec even n = if n = 0 then true else odd (n-1)<br />
+and odd n = if n = 0 then false else even (n-1);;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>anonymous function</p></td>
+<td><p>fn x =&gt; fn y =&gt; (x + y) / 2.0</p></td>
+<td><p>fun x -&gt; fun y -&gt; (x +. y) /. 2.0</p></td>
+<td><p>fun x -&gt; fun y -&gt; (x + y) / 2.0</p></td>
+<td><p>\x y -&gt; (x+y) / 2.0</p></td>
+</tr>
+<tr class="odd">
+<td><p>infix operator in prefix position</p></td>
+<td><p>(op * ) (3, 4)</p></td>
+<td><p>( * ) 3 4;;</p></td>
+<td></td>
+<td><p>( * ) 3 4</p></td>
+</tr>
+<tr class="even">
+<td><p>function in infix position</p></td>
+<td></td>
+<td><p>none</p></td>
+<td></td>
+<td><p>add x y = x + y<br />
+3 ‘add` 4</p></td>
+</tr>
+<tr class="odd">
+<td><p>currying</p></td>
+<td><p>un plus x y = x + y;<br />
+val plus2 = plus 2;<br />
+plus2 7;</p></td>
+<td><p>let plus2 = (+) 2;;</p></td>
+<td></td>
+<td><p>plus2 = (+) 2</p></td>
+</tr>
+<tr class="even">
+<td><p>composition</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>f x = x + 2<br />
+g x = x * 3<br />
+(f . g ) 4</p></td>
+</tr>
+<tr class="odd">
+<td><p>function composition operator</p></td>
+<td><p>fun double x = 2 * x;<br />
+val quadruple = double o double;</p></td>
+<td><p>none</p></td>
+<td></td>
+<td><p>double x = 2 * x<br />
+quadruple x = double . double</p></td>
+</tr>
+<tr class="even">
+<td><p>lazy evaluation</p></td>
+<td></td>
+<td><p>let arg1 x y = x;;<br />
+<br />
+arg1 7 (lazy (1/0) );;</p></td>
+<td></td>
+<td><p>lazy evaluation is default:<br />
+arg1 x y = x<br />
+<br />
+arg1 7 (error "bam!")</p></td>
+</tr>
+<tr class="odd">
+<td><p>strict evaluation</p></td>
+<td></td>
+<td><p>default behavior</p></td>
+<td><p>default behavior</p></td>
+<td><p>arg1 x y = seq y x<br />
+<br />
+arg1 7 (error "bam!")</p></td>
+</tr>
+<tr class="even">
+<td><p>execution control</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="even">
+<td><p>if</p></td>
+<td><p>f x &gt; 0 then<br />
+  print "pos\n"<br />
+else<br />
+  ();</p></td>
+<td><p>if x &gt; 0 then<br />
+  print_endline "pos";;</p></td>
+<td><p>if x &gt; 0 then<br />
+  printfn "pos"</p></td>
+<td><p>if x &gt; 0<br />
+  then putStrLn "pos"<br />
+  else return ()</p></td>
+</tr>
+<tr class="odd">
+<td><p>if else-if else</p></td>
+<td><p>if x &gt; 0 then print "pos" else if x &lt; 0 then print "neg"
+else print "zero";</p></td>
+<td><p>if x &gt; 0 then<br />
+  print_endline "pos"<br />
+else<br />
+  if x &lt; 0 then<br />
+    print_endline "neg"<br />
+  else<br />
+    print_endline "zero";;</p></td>
+<td><p>if x &gt; 0 then<br />
+  printfn "pos"<br />
+else<br />
+  if x &lt; 0 then<br />
+    printfn "neg"<br />
+  else<br />
+    printfn "zero"</p></td>
+<td><p>if x &gt; 0<br />
+  then putStrLn "pos"<br />
+  else if x &lt; 0<br />
+    then putStrLn "neg"<br />
+    else putStrLn "zero"</p></td>
+</tr>
+<tr class="even">
+<td><p>sequencing</p></td>
+<td></td>
+<td><p>print_endline "one";<br />
+print_endline "two";<br />
+print_endline "three";;</p></td>
+<td><p>printfn "one"<br />
+printfn "two"<br />
+printfn "three"</p></td>
+<td><p>do<br />
+  putStrLn "one"<br />
+  putStrLn "two"<br />
+  putStrLn "three"</p></td>
+</tr>
+<tr class="odd">
+<td><p>while</p></td>
+<td></td>
+<td><p>let i = ref 0;;<br />
+<br />
+while !i &lt; 10 do<br />
+  print_endline (string_of_int !i);<br />
+  i := !i + 1<br />
+done;;</p></td>
+<td><p>let i = ref 0<br />
+<br />
+while !i &lt; 10 do<br />
+  printfn "%d" !i<br />
+  i := !i + 1</p></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>for</p></td>
+<td></td>
+<td><p>for i = 1 to 10 do<br />
+  let s = string_of_int i in<br />
+  print_endline s<br />
+done;;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>for in reverse</p></td>
+<td></td>
+<td><p>for i = 10 downto 1 do<br />
+  let s = string_of_int i in<br />
+  print_endline s<br />
+done;;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>list iteration</p></td>
+<td></td>
+<td><p>none</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>loop</p></td>
+<td></td>
+<td><p>let rec loop i =<br />
+  if i &lt;= 10 then begin<br />
+    print_endline (string_of_int i);<br />
+    loop (i+1)<br />
+  end in<br />
+loop 0;;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>exceptions</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="even">
+<td><p>raise error</p></td>
+<td></td>
+<td><p>raise (Failure "bam!");;<br />
+or<br />
+failwith "bam!";;</p></td>
+<td></td>
+<td><p>error "bam!"</p></td>
+</tr>
+<tr class="odd">
+<td><p>handle error</p></td>
+<td></td>
+<td><p>let x = try 1 / 0 with Division_by_zero -&gt; 0;;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>type of exceptions</p></td>
+<td></td>
+<td><p>exn</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>user defined exception</p></td>
+<td></td>
+<td><p>exception Foo of string;;<br />
+raise (Foo "invalid input");;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>standard exceptions</p></td>
+<td></td>
+<td><p>Division_by_zero<br />
+Failure string<br />
+Not_found<br />
+Invalid_argument string<br />
+Match_failure (string, int, int)<br />
+Assert_failure (string, int, int)<br />
+Out_of_memory<br />
+Stack_overflow</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>assert</p></td>
+<td></td>
+<td><p>assert(1 = 0);;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>concurrency</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="even">
+<td><p>file handles</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="even">
+<td><p>standard file handles</p></td>
+<td></td>
+<td><p>stdin stdout stderr</p></td>
+<td><p>stdin stdout stderr</p></td>
+<td><p>import System.Posix.IO<br />
+<br />
+stdInput stdOutput stdError</p></td>
+</tr>
+<tr class="odd">
+<td><p>read line from stdin</p></td>
+<td></td>
+<td><p>let line = read_line();;</p></td>
+<td></td>
+<td><p>line &lt;- getLine</p></td>
+</tr>
+<tr class="even">
+<td><p>end-of-file behavior</p></td>
+<td></td>
+<td><p>raises End_of_file</p></td>
+<td></td>
+<td><p>when last data is returned, hIsEOF will return True. Reading
+after end-of-file throws an exception.</p></td>
+</tr>
+<tr class="odd">
+<td><p>chomp</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>write line to stdout</p></td>
+<td></td>
+<td><p>print_endline "lorem ipsum";;</p></td>
+<td><p>printfn "lorem ipsum"</p></td>
+<td><p>putStrLn "lorem ipsum"</p></td>
+</tr>
+<tr class="odd">
+<td><p>write formatted string to stdout</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>open file for reading</p></td>
+<td></td>
+<td><p>let f = open_in "/etc/passwd";;</p></td>
+<td></td>
+<td><p>import System.IO<br />
+<br />
+f &lt;- openFile "/etc/hosts" ReadMode</p></td>
+</tr>
+<tr class="odd">
+<td><p>open file for writing</p></td>
+<td></td>
+<td><p>let f = open_out "/tmp/ocaml.out";;</p></td>
+<td></td>
+<td><p>import System.IO<br />
+<br />
+f &lt;- openFile "/tmp/test" WriteMode</p></td>
+</tr>
+<tr class="even">
+<td><p>open file for appending</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>import System.IO<br />
+<br />
+f &lt;- openFile "/tmp/err.log" AppendMode</p></td>
+</tr>
+<tr class="odd">
+<td><p>close file</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>import System.IO<br />
+<br />
+hClose f</p></td>
+</tr>
+<tr class="even">
+<td><p>i/o errors</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>read line</p></td>
+<td><p>fun displayFile(file: string) =<br />
+  let<br />
+    val f = TextIO.openIn file<br />
+    fun iter(s: string option) =<br />
+    case s of<br />
+    NONE =&gt;<br />
+      (TextIO.closeIn f)<br />
+    | SOME(line) =&gt;<br />
+      (print line;<br />
+      iter(TextIO.inputLine f))<br />
+  in<br />
+    iter(TextIO.inputLine f)<br />
+  end<br />
+displayFile("/etc/passwd");</p></td>
+<td><p>let ic = open_in "/etc/passwd" in<br />
+let line = input_line ic in<br />
+print_endline line;;</p></td>
+<td></td>
+<td><p>import IO<br />
+<br />
+readAndPrintLines h = do<br />
+  eof &lt;- hIsEOF h<br />
+  if eof<br />
+    then return ()<br />
+    else do<br />
+      line &lt;- hGetLine h<br />
+      putStrLn line<br />
+      readAndPrintLines h<br />
+<br />
+main = do<br />
+  h &lt;- openFile "/etc/passwd" ReadMode<br />
+  readAndPrintLines h</p></td>
+</tr>
+<tr class="even">
+<td><p>iterate over file by line</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>read file into array of strings</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>read file into string</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>write string</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>write line</p></td>
+<td><p>val file = "/tmp/test-sml";<br />
+val f = TextIO.openOut file;<br />
+TextIO.output(f, "hello out\n");<br />
+TextIO.closeOut f;</p></td>
+<td><p>open Printf<br />
+let oc = open_out "/tmp/test-ocaml" in<br />
+fprintf oc "hello out\n";<br />
+close_out oc;;</p></td>
+<td></td>
+<td><p>s = "hello out\n"<br />
+f = "/tmp/test-haskell"<br />
+main = writeFile f s</p></td>
+</tr>
+<tr class="odd">
+<td><p>flush file handle</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>end-of-file test</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>get and set filehandle position</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>files</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="even">
+<td><p>file test, regular file test</p></td>
+<td></td>
+<td><p>open Unix<br />
+<br />
+try Some (stat "/etc/hosts") with<br />
+  Unix_error (ENOENT, _, _) -&gt; None<br />
+<br />
+(stat "/etc/hosts").st_kind = S_REG</p></td>
+<td></td>
+<td><p>import System<br />
+<br />
+Directory.doesFileExist "/etc/hosts"<br />
+<br />
+import Control.Monad<br />
+import System.Posix.Files<br />
+<br />
+liftM isRegularFile (getFileStatus "/etc/hosts")</p></td>
+</tr>
+<tr class="odd">
+<td><p>file size</p></td>
+<td></td>
+<td><p>(stat "/etc/hosts").st_size</p></td>
+<td></td>
+<td><p>import Control.Monad<br />
+import System.Posix.Files<br />
+<br />
+liftM fileSize (getFileStatus "/etc/hosts")</p></td>
+</tr>
+<tr class="even">
+<td><p>is file readable, writable, executable</p></td>
+<td></td>
+<td><p>open Unix<br />
+<br />
+try access "/tmp/bar" [R_OK]; true with<br />
+  Unix.Unix_error (EACCES, _, _) -&gt; false;;<br />
+try access "/tmp/bar" [W_OK]; true with<br />
+  Unix.Unix_error (EACCES, _, _) -&gt; false;;<br />
+try access "/tmp/bar" [X_OK]; true with<br />
+  Unix.Unix_error (EACCES, _, _) -&gt; false;;</p></td>
+<td></td>
+<td><p>import Control.Monad<br />
+<br />
+liftM readable<br />
+  (getPermissions "/etc/hosts")<br />
+liftM writable<br />
+  (getPermissions "/etc/hosts")<br />
+liftM executable<br />
+  (getPermissions "/etc/hosts")</p></td>
+</tr>
+<tr class="odd">
+<td><p>set file permissions</p></td>
+<td></td>
+<td><p>open Unix<br />
+<br />
+chmod "/tmp/foo" 0o755</p></td>
+<td></td>
+<td><p>import System.Posix.Files<br />
+<br />
+setFileMode "/tmp/foo" ownerModes<br />
+setFileMode "/tmp/foo" groupReadMode<br />
+setFileMode "/tmp/foo" groupExecuteMode<br />
+setFileMode "/tmp/foo" otherReadMode<br />
+setFileMode "/tmp/foo" otherExecuteMode</p></td>
+</tr>
+<tr class="even">
+<td><p>copy file, remove file, rename file</p></td>
+<td></td>
+<td><p>open Unix<br />
+<br />
+??<br />
+unlink "/tmp/foo"<br />
+rename "/tmp/bar" "/tmp/foo"</p></td>
+<td></td>
+<td><p>import System.Directory<br />
+<br />
+copyFile "/tmp/foo" "/tmp/bar"<br />
+removeFile "/tmp/foo"<br />
+renameFile "/tmp/bar" "/tmp/foo"</p></td>
+</tr>
+<tr class="odd">
+<td><p>create symlink, symlink test, readlink</p></td>
+<td></td>
+<td><p>open Unix<br />
+<br />
+symlink "/etc/hosts" "/tmp/hosts"<br />
+(lstat "/tmp/hosts").st_kind = S_LNK<br />
+readlink "/tmp/hosts"</p></td>
+<td></td>
+<td><p>import System.Posix.Files<br />
+<br />
+createSymbolicLink "/etc/hosts" "/tmp/hosts"<br />
+??<br />
+readSymbolicLink "/tmp/hosts"</p></td>
+</tr>
+<tr class="even">
+<td><p>generate unused file name</p></td>
+<td></td>
+<td><p>open Filename<br />
+<br />
+(* prefix and suffix: *)<br />
+temp_file "foo" ".txt"</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>directories</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td><p>build pathname</p></td>
+<td></td>
+<td><p>open Filename<br />
+<br />
+concat "/etc" "hosts"</p></td>
+<td></td>
+<td><p>import System.FilePath ((&lt;/&gt;))<br />
+<br />
+let path = "/etc" &lt;/&gt; "hosts"</p></td>
+</tr>
+<tr class="even">
+<td><p>dirname and basename</p></td>
+<td></td>
+<td><p>open Filename<br />
+<br />
+dirname "/etc/hosts"<br />
+basename "/etc/hosts"</p></td>
+<td></td>
+<td><p>import System.FilePath<br />
+<br />
+takeFileName "/etc/hosts"<br />
+takeDirectory "/etc/hosts"</p></td>
+</tr>
+<tr class="odd">
+<td><p>iterate over directory by file</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>import System<br />
+<br />
+-- returns IO [FilePath]<br />
+Directory.getDirectoryContents "/etc"</p></td>
+</tr>
+<tr class="even">
+<td><p>make directory</p></td>
+<td></td>
+<td><p>(* opam install fileutils *)<br />
+open FileUtil<br />
+<br />
+mkdir ~parent:true "/tmp/foo/bar"</p></td>
+<td></td>
+<td><p>import System.Directory<br />
+<br />
+createDirectoryIfMissing True<br />
+  "/tmp/foo/bar"</p></td>
+</tr>
+<tr class="odd">
+<td><p>remove empty directory</p></td>
+<td></td>
+<td><p>open Unix<br />
+<br />
+rmdir "/tmp/foodir"</p></td>
+<td></td>
+<td><p>import System.Directory<br />
+<br />
+removeDirectory "/tmp/foodir"</p></td>
+</tr>
+<tr class="even">
+<td><p>remove directory and contents</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>import System.Directory<br />
+<br />
+removeDirectoryRecursive "/tmp/foodir"</p></td>
+</tr>
+<tr class="odd">
+<td><p>directory test</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>import System<br />
+<br />
+Directory.doesDirectoryExist "/tmp"</p></td>
+</tr>
+<tr class="even">
+<td><p>temporary directory</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>processes and environment</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td><p>command line arguments</p></td>
+<td></td>
+<td><p>for i = 0 to Array.length Sys.argv - 1 do<br />
+  print_endline i Sys.argv.(i)<br />
+done</p></td>
+<td></td>
+<td><p>import System<br />
+<br />
+printArgs args = do<br />
+  if length args == 0<br />
+    then return ()<br />
+    else do<br />
+      putStrLn (head args)<br />
+      printArgs (tail args)<br />
+main = do<br />
+  a &lt;- getArgs<br />
+  printArgs a</p></td>
+</tr>
+<tr class="even">
+<td><p>program name<br />
+</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>import System<br />
+<br />
+s &lt;- getProgName</p></td>
+</tr>
+<tr class="odd">
+<td><p>getopt</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>get and set environment variable<br />
+</p></td>
+<td></td>
+<td><p>open Unix<br />
+<br />
+s = getenv "HOME"<br />
+putenv "PATH" "/bin"</p></td>
+<td></td>
+<td><p>import System.Posix.Env<br />
+<br />
+s &lt;- getEnv "HOME"<br />
+putEnv "PATH=/bin"</p></td>
+</tr>
+<tr class="odd">
+<td><p>get pid, parent pid</p></td>
+<td></td>
+<td><p>open Unix<br />
+<br />
+let pid = getpid()<br />
+let ppid = getppid()</p></td>
+<td></td>
+<td><p>import System.Posix.Process<br />
+<br />
+pid &lt;- getProcessID<br />
+ppid &lt;- getParentProcessID</p></td>
+</tr>
+<tr class="even">
+<td><p>get user id and name</p></td>
+<td></td>
+<td><p>let uid = getuid()<br />
+let username =<br />
+  (getpwuid (getuid())).pw_name</p></td>
+<td></td>
+<td><p>import System.Posix.User<br />
+<br />
+uid &lt;- getRealUserID<br />
+username &lt;- getLoginName</p></td>
+</tr>
+<tr class="odd">
+<td><p>exit<br />
+</p></td>
+<td></td>
+<td><p>exit 0<br />
+<br />
+exit 1</p></td>
+<td></td>
+<td><p>import System.Exit<br />
+<br />
+exitWith ExitSuccess<br />
+<br />
+to return nonzero status:<br />
+exitWith (ExitFailure 1)</p></td>
+</tr>
+<tr class="even">
+<td><p>set signal handler<br />
+</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>external command<br />
+</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>import System.Cmd<br />
+<br />
+rawSystem "ls" ["-l", "/tmp"]</p></td>
+</tr>
+<tr class="even">
+<td><p>escaped external command<br />
+</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>backticks<br />
+</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>libraries and namespaces</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="even">
+<td><p>namespace example</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>Foo/Bar.hs<br />
+module Foo.Bar where<br />
+  data Baz = Baz<br />
+  say Baz = putStrLn "hello"<br />
+<br />
+Main.hs<br />
+module Main where<br />
+import Foo.Bar<br />
+baz = Baz<br />
+main = say baz<br />
+<br />
+to compile and run<br />
+$ ghc -c Foo/Bar.hs<br />
+$ ghc Main.hs<br />
+$ ./Main<br />
+hello</p></td>
+</tr>
+<tr class="odd">
+<td><p>namespaces</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>values, constructors, type variables, type constructors, type
+classes, modules</p></td>
+</tr>
+<tr class="even">
+<td><p>file name restrictions</p></td>
+<td></td>
+<td><p>module Foo.Bar must be in Foo.ml</p></td>
+<td></td>
+<td><p>module Foo.Bar must be in Foo/Bar.hs</p></td>
+</tr>
+<tr class="odd">
+<td><p>namespace</p></td>
+<td></td>
+<td><p>open Graphics;;</p></td>
+<td></td>
+<td><p>import Data.Bytestring</p></td>
+</tr>
+<tr class="even">
+<td><p>namespace creation</p></td>
+<td></td>
+<td><p>put code in file MODULE_NAME.ml</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>namespace alias</p></td>
+<td></td>
+<td><p>module Gr = Graphics;;</p></td>
+<td></td>
+<td><p>import qualified Data.Bytestring as B</p></td>
+</tr>
+<tr class="even">
+<td><p>namespace separator</p></td>
+<td></td>
+<td><p>.</p></td>
+<td></td>
+<td><p>.</p></td>
+</tr>
+<tr class="odd">
+<td><p>subnamespace</p></td>
+<td></td>
+<td><p>in A.ml:<br />
+module B =<br />
+sig<br />
+  val display_instruction : unit -&gt; unit<br />
+end =<br />
+struct<br />
+  let msg = "attack"<br />
+  let display_instruction () = print_endline msg<br />
+end<br />
+in client source:<br />
+A.B.display_instruction;;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>package manager setup</p></td>
+<td></td>
+<td><p>do this once:<br />
+$ opam init<br />
+<br />
+for each shell session:<br />
+$ eval $(opam config env)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>package manager<br />
+search; install; list installed</p></td>
+<td></td>
+<td><p>$ opam search utop<br />
+$ opam install utop<br />
+$ opam list --installed</p></td>
+<td></td>
+<td><p>$ cabal list parsec<br />
+$ cabal install parsec<br />
+$ cabal list --installed</p></td>
+</tr>
+<tr class="even">
+<td><p>compile app using package</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>user-defined types</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td><p>type synonym<br />
+</p></td>
+<td><p>type name = string;</p></td>
+<td><p>type name = string;;</p></td>
+<td><p>type name = string</p></td>
+<td><p>type Name = String</p></td>
+</tr>
+<tr class="even">
+<td><p>sum type</p></td>
+<td><p>datatype color = Red | Green | Blue;</p></td>
+<td><p>type color = Red | Green | Blue;;<br />
+<br />
+let col = Red;;<br />
+<br />
+(* evaluates to true: *)<br />
+col &lt; Green;;</p></td>
+<td><p>type color = Red | Green | Blue<br />
+<br />
+let col = Red<br />
+<br />
+// evaluates to true:<br />
+col &lt; Green</p></td>
+<td><p>data Color = Red | Green | Blue<br />
+<br />
+col = Red<br />
+<br />
+-- this won’t compile:<br />
+col &lt; Green</p></td>
+</tr>
+<tr class="odd">
+<td><p>tuple product type with one field</p></td>
+<td><p>datatype special_int = SpecialInt of int;<br />
+<br />
+val x = SpecialInt 7;</p></td>
+<td><p>type special_int = SpecialInt of int;;<br />
+<br />
+let n = SpecialInt 7;;</p></td>
+<td><p>type special_int = SpecialInt of int<br />
+<br />
+let n = SpecialInt 7</p></td>
+<td><p>data SpecialIntType = SpecialInt Integer<br />
+<br />
+n = SpecialInt 7</p></td>
+</tr>
+<tr class="even">
+<td><p>tuple product type with two fields</p></td>
+<td><p>datatype int_pair = IntPair of int * int;<br />
+<br />
+val y = IntPair (7, 11);</p></td>
+<td><p>type int_pair = IntPair of int * int;;<br />
+<br />
+let p = IntPair (7, 11);;</p></td>
+<td><p>type int_pair = IntPair of int * int<br />
+<br />
+let p = IntPair (7, 11)</p></td>
+<td><p>data IntPairType = IntPair Integer Integer<br />
+<br />
+p = IntPair 7 11</p></td>
+</tr>
+<tr class="odd">
+<td><p>record product type</p></td>
+<td><p>type customer = {id:int, name:string, address:string}</p></td>
+<td><p>type customer = {<br />
+  id: int;<br />
+  name: string;<br />
+  address: string<br />
+};;</p></td>
+<td><p>type customer = {<br />
+  id: int;<br />
+  name: string;<br />
+  address: string<br />
+}</p></td>
+<td><p>data CustomerType = Customer {<br />
+  customerId :: Integer,<br />
+  name :: String,<br />
+  address :: String<br />
+}</p></td>
+</tr>
+<tr class="even">
+<td><p>record product type literal</p></td>
+<td><p>{id=7, name="John", address="Topeka, KS"}</p></td>
+<td><p>let cust = {<br />
+  id=7;<br />
+  name="John";<br />
+  address="Topeka, KS"<br />
+};;</p></td>
+<td><p>{id=7; name="John"; address="Topeka, KS"}</p></td>
+<td><p>Customer {<br />
+  customerId=7,<br />
+  name="John",<br />
+  address="Topeka, KS" }</p></td>
+</tr>
+<tr class="odd">
+<td><p>generic type</p></td>
+<td><p>datatype ('a, 'b) twosome =<br />
+  Twosome of 'a * 'b;<br />
+<br />
+val z = Twosome ("pi", 3.14);</p></td>
+<td><p>type ('a, 'b) twosome =<br />
+  Twosome of 'a * 'b;;<br />
+<br />
+let p = Twosome ("pi", 3.14);;</p></td>
+<td><p>type ('a, 'b) twosome =<br />
+  Twosome of 'a * 'b<br />
+<br />
+let p = Twosome ("pi", 3.14)</p></td>
+<td><p>data TwosomeType a b = Twosome a b<br />
+<br />
+p = Twosome ("pi", 3.14)</p></td>
+</tr>
+<tr class="even">
+<td><p>recursive type</p></td>
+<td><p>datatype binary_tree =<br />
+  Leaf of int<br />
+  | Tree of binary_tree * binary_tree;</p></td>
+<td><p>type binary_tree =<br />
+  | Leaf of int<br />
+  | Tree of binary_tree * binary_tree;;</p></td>
+<td><p>type binary_tree =<br />
+  | Leaf of int<br />
+  | Tree of binary_tree * binary_tree</p></td>
+<td><p>data BinaryTree = Leaf Integer | Tree BinaryTree
+BinaryTree</p></td>
+</tr>
+<tr class="odd">
+<td><p>pattern match sum type</p></td>
+<td><p>val c = Red;<br />
+<br />
+case c of Red =&gt; "red"<br />
+  | Blue =&gt; "blue"<br />
+  | Green =&gt; "green";</p></td>
+<td><p>let col = Red;;<br />
+<br />
+let s = match col with<br />
+  | Red -&gt; "red"<br />
+  | Blue -&gt; "blue"<br />
+  | Green -&gt; "green";;</p></td>
+<td></td>
+<td><p>c = Red<br />
+case c of Red -&gt; "red"<br />
+  Green -&gt; "green"<br />
+  Blue -&gt; "blue"</p></td>
+</tr>
+<tr class="even">
+<td><p>pattern match product type</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>pattern match guard</p></td>
+<td><p>none; use if</p></td>
+<td><p>match i with j when i &lt; 0 -&gt; -j | j -&gt; j;;</p></td>
+<td></td>
+<td><p>none, use if or piecewise function definition</p></td>
+</tr>
+<tr class="even">
+<td><p>pattern match catchall</p></td>
+<td><p>fun to_s c = case c of Red =&gt; "red" | _ =&gt; "not
+red";</p></td>
+<td><p>let to_s c = match c with Red -&gt; "red" | _ -&gt; "not
+red";;<br />
+to_s Green;;</p></td>
+<td></td>
+<td><p>c = Green<br />
+case c of Red -&gt; "red"; _ -&gt; "not red"</p></td>
+</tr>
+<tr class="odd">
+<td><p>objects</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td><p>class definition</p></td>
+<td></td>
+<td><p>class counter = object<br />
+  val mutable n = 0<br />
+  method incr = n &lt;- n+1<br />
+  method get = n<br />
+end;;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>object creation</p></td>
+<td></td>
+<td><p>let c = new counter;;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>method invocation</p></td>
+<td></td>
+<td><p>c#incr;;<br />
+c#get;;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>field access</p></td>
+<td></td>
+<td><p>none</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>inheritance and polymorphism</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td><p>overload function</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>inheritance</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>net and web</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td><p>unit test</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td><p>debugging and profiling</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td><p>repl</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><p>sml</p></td>
+<td><p>ocaml</p></td>
+<td><p>f#</p></td>
+<td><p>haskell</p></td>
+</tr>
+<tr class="odd">
+<td><p>invoke repl</p></td>
+<td><p>$ sml</p></td>
+<td><p>$ ocaml<br />
+<br />
+Use this if you want history:<br />
+$ rlwrap ocaml<br />
+<br />
+The utop toplevel, which can be installed via opam, also provides
+history.</p></td>
+<td><p>Mono:<br />
+$ fsharpi<br />
+<br />
+In visual studio, highlight code and press ALT+ENTER.</p></td>
+<td><p>$ ghci</p></td>
+</tr>
+<tr class="even">
+<td><p>repl limitations</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>Must use let to define values and functions; when defining
+functions with multiple equations the equations must be separated by
+semicolons; the clauses of case/of statements must be separated by
+semicolons; it is not possible to define data types.</p></td>
+</tr>
+<tr class="odd">
+<td><p>repl last value</p></td>
+<td><p>it</p></td>
+<td><p>none</p></td>
+<td><p>it</p></td>
+<td><p>it</p></td>
+</tr>
+<tr class="even">
+<td><p>help</p></td>
+<td></td>
+<td><p>none</p></td>
+<td></td>
+<td><p>:?</p></td>
+</tr>
+<tr class="odd">
+<td><p>quit</p></td>
+<td></td>
+<td><p>^D</p></td>
+<td><p>#quit;;</p></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>inspect type</p></td>
+<td></td>
+<td><p>repl displays the type of any expression entered</p></td>
+<td></td>
+<td><p>let a = 3<br />
+:type a</p></td>
+</tr>
+<tr class="odd">
+<td><p>inspect namespace</p></td>
+<td></td>
+<td><p>module Unix = Unix;;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>load source file</p></td>
+<td><p>use "hello.ml";</p></td>
+<td><p>#use "hello";;</p></td>
+<td></td>
+<td><p>:edit hello.hs<br />
+:load hello</p></td>
+</tr>
+<tr class="odd">
+<td><p>load package</p></td>
+<td></td>
+<td><p>consider adding to .ocamlinit:<br />
+#use "topfind";;<br />
+# thread;;<br />
+#require "core";;<br />
+open Core.Std;;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><p>search path</p></td>
+<td></td>
+<td><p>#directory "libdir";;</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><p>set search path on command line</p></td>
+<td></td>
+<td><p>ocaml -Ilibdir</p></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>

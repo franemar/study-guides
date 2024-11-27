@@ -1,0 +1,3 @@
+build-html-from-mediawiki:
+  pandoc -r mediawiki -o 'ML-Dialects&Haskell_SML&OCaml&F#&Haskell-table.html' 'ML-Dialects&Haskell_SML&OCaml&F#&Haskell-table.mhtml'
+  
