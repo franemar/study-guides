@@ -8,29 +8,301 @@ _a side-by-side reference sheet_
 [grammar and invocation](#grammar-invocation) \| [variables and expressions](#var-expr) \| [arithmetic and logic](#arithmetic-logic) \| [strings](#strings) \| [dates and time](#dates-time) \| [arrays](#arrays) \| [lists](#lists) \| [tuples](#tuples) \| [dictionaries](#dictionaries) \| [functions](#functions) \| [execution control](#execution-control) \| [exceptions](#exceptions) \| [concurrency](#concurrency) \| [file handles](#file-handles) \| [files](#files) \| [directories](#directories) \| [processes and environment](#processes-environment) \| [libraries and namespaces](#libraries-namespaces) \| [user-defined types](#user-defined-types) \| [objects](#objects) \| [inheritance and polymorphism](#inheritance-polymorphism) \| [net and web](#net-web) \| [unit tests](#unit-tests) \| [debugging and profiling](#debugging-profiling) \| [repl](#repl)
 
 
+#|            | sml | ocaml | f# | haskell |
+#| :-------------: | :-------------: | :-----: | :---: | :---: |
+#[interpreter](#interpreter-note)$ echo 'print\_endline "hello"' > hello.ml
+
 |            | [sml](#sml) | [ocaml](#ocaml) | [f#](#fsharp) | [haskell](#haskell) |
 | :-------------: | :-------------: | :-----: | :---: | :---: |
 | [version used](#version-used-note) | _SML NJ 110_ | _4.0_ | _F# 3.0. Mono 3.2_ | _7.4_  
 | [show version](#version-note)      | _displayed at startup_ | $ `ocaml -version` | $ `fsharpi --help` | $ `ghc --version` |
+| ### [grammar and invocation](#grammar-invocation-note) |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| [interpreter](#interpreter-note)   |  | $ `echo 'print_endline "hello"' > hello.ml` $ `ocaml hello.ml` | $ `cat <<EOF > hello.fs module hello let main = printfn "hello" EOF`  $ `fsharpi --quiet --exec hello.fs` | $ `echo 'main = putStrLn "hello"' > hello.hs`  $ `runghc hello.hs` |
+| [shebang](#shebang-note) |  | $ `cat <<EOF > hello.ml \#!/usr/bin/env ocaml  print_endline "hello";; EOF`  $ chmod +x hello.ml $ ./hello.ml | $ cat <<EOF > hello.fs #light (*   exec fsharpi --exec $0 --quiet *)  module hello  printfn "hello" EOF  $ chmod +x hello.fs $ ./hello.fs | $ cat <<EOF > hello.hs #!/usr/bin/env runghc  main = putStrLn "hello" EOF  $ chmod +x hello.hs $ ./hello.hs |
+| bytecode compiler and interpreter |  | $ echo 'print_endline "hello";;' > hello.ml $ ocamlc -o hello hello.ml $ ocamlrun hello | $ echo 'printfn "hello"' > hello.fs $ fsharpc hello.fs $ mono hello.exe | none |
+| native compiler |  | $ echo 'print_endline "hello";;' > hello.ml $ ocamlopt hello.ml -o hello $ ./hello | none | $ echo 'main = putStrLn "hello"' > hello.hs $ ghc -o hello hello.hs $ ./hello |
+| library which is always imported |  | Pervasives | Core | Prelude |
+| statement terminator | ; | ;; | ;; | next line has equal or less indentation, or ; |
+| blocks | ( expr ; … ) | ( expr ; … ) begin expr ; … end | ( expr ; … ) begin expr ; … end | offside rule or { } |
+| end-of-line comment | none | none | // comment | -- comment |
+| multiple line comment | (* comment another comment *) | (* comment another comment *) | (* comment another comment *) | {- comment another comment -} |
+| variables and expressions |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| write-once variable   | val a = 3; | let n = 1 + 2;; | let n = 1 + 2 | n = 3 |
+| modifiable variable | val a = ref 3; a := 4; !a + 7; | let n = ref 3;; n := 4;; !n + 7;; | let n = ref 3 n := 4 !n + 7 | n <- return 3 |
+| unit type and value | unit () | unit () | unit () | () () |
+| conditional expression | val x = 3; if x < 0 then ~x else x; | let n = -3;; let absn = if n < 0 then -n else n;; | let n = -3 let absn = if n < 0 then -n else n | n = -3 let absn = if n < 0 then -n else n |
+| branch type mismatch | (* compilation error: *) if true then "hello" else 3; | (* compilation error: *) if true then "hello" else 3;; | (* compilation error: *) if true then "hello" else 3 | -- compilation error: if True then "hello" else 3 |
+| null   | NONE | None | None  Also this value returned by .NET library functions. It has a type distinct from None: null | Nothing |
+| nullable type | type list_option_int = int option list;  val list = [SOME 3,NONE, SOME ~4]; | type list_option_int = int option list;;  let list = [Some 3; None; Some (-4)];; |  | list = [Just(3), Nothing, Just(-4)] |
+| null test |  | match foo with   \| None -> true   \| _ -> false;; |  |  |
+| coalesce | val foo = SOME 3;  (* raises exception if NONE: *) valOf foo;  (* evaluates to 0 if NONE: *) getOpt (foo, 0); | match foo with   \| None -> 0   \| Some n -> n;; |  | import Data.Maybe  let foo = Just(3) raises exception if Nothing: fromJust foo  let intId x = x evaluates to 0 if Nothing: maybe 0 intId foo |
+| nullif |  | match foo with   \| -999 -> None   \| n -> Some n;; |  |  |
+| expression type declaration |  | float 1 | float 1 | 1 :: Double |
+| let ... in ... | val z = let   val x = 3.0   val y = 2.0 * x in   x * y end; | let z =   let x = 3.0 in   let y = 2.0 *. x in   x *. y;; | let z =   let x = 3.0 in   let y = 2.0 * x in   x * y | z = let x = 3.0         y = 2.0 * x     in x * y |
+| where | none | none | none | z = x * y   where x = 3.0         y = 2.0 * x |
+| arithmetic and logic |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| boolean type   | bool | bool | bool | Bool |
+| true and false   | true false | true false | true false | True False |
+| logical operators | andalso orelse not | && \|\| not | && \|\| not | && \|\| not |
+| relational operators | Err:510 | Err:510 | Err:510 | Err:510 |
+| min and max |  | min 1 2 max 1 2 | min 1 2 max 1 2 | min 1 2 max 1 2 |
+| integer type | int | int  other integer types: int32 int64 nativeint | int  other integer types: int32 int64 nativeint | Integer |
+| integer literal | negative integer: ~4 | int, int64, and nativeint literals: 12 12L 12n  literals can contain underscores: 1_000_000  this parses as an expression: -4 | -4 | an expression, not a literal: -4 |
+| float type | real | float | float | Double |
+| integer operators | + - * div mod | + - * / mod mod //is an infix operator | + - * / % | + - * div rem div and rem are functions, not infix operators |
+| float operators   | + - * / | +. -. *. /. | + - * / | + - * / |
+| add integer and float | real 3 + 7.0; | float 3 +. 7.0 | float 3 + 7.0 | 3 + 7.0 |
+| integer division and remainder | 7 div 3 7 mod 3 real 7 / real 3 | 7 / 3 7 mod 3 | 7 / 3 7 % 3 | div 7 3 rem 7 3 |
+| integer division by zero |  | raises Division_by_zero | System.DivideByZeroException | Exception: divide by zero |
+| float division   |  | float 7 /. float 3 | float 7 / float 3 | 7 / 3 |
+| float division by zero |  | infinity nan or neg_infinity | infinity nan or neg_infinity | evaluates to Infinity, NaN, or -Infinity, values which do not have literals |
+| power | Math.pow (2.0, 32.0); | 2.0 ** 32.0 | 2.0 ** 32.0 | 2 ** 32  -- syntax error if exponent not an integer: 2 ^ 32 |
+| sqrt   | Math.sqrt 2.0 | sqrt 2.0 | sqrt 2.0 | sqrt 2 |
+| sqrt -1 | Math.sqrt ~1.0 evaluates to nan | sqrt (-1.0): nan | nan | sqrt (-1) evaluates to NaN, a value which has no literal |
+| transcendental functions | Math.exp Math.ln Math.sin Math.cos Math.tan Math.asin Math.acos Math.atan Math.atan2 | exp log sin cos tan asin acos atan atan2 | exp log sin cos tan asin acos atan atan2 | exp log sin cos tan asin acos atan atan2 |
+| transcendental constants | Math.pi Math.e | 4.0 *. atan 1.0 exp 1.0 | System.Math.PI System.Math.E | pi exp 1 |
+| float truncation | round 3.14 trunc 3.14 floor 3.14 ceil 3.14 | truncate 3.14 none floor 3.14 returns float ceil 3.14 returns float | truncate 3.14 round 3.14 floor 3.14 returns float ceil 3.14 returns float | truncate 3.14 round 3.14 floor 3.14 ceiling 3.14 |
+| absolute value and signum |  | abs (-7) abs_float (-7.0) no signum | abs -7 abs -7.0 sign -7 sign -7.0 | abs (-7) signum (-7) |
+| integer overflow | Overflow exception | modular arithmetic | modular arithmetic | has arbitrary length integers |
+| float overflow |  | infinity | infinity | evaluates to Infinity, a value which has no literal |
+| arbitrary length integer |  | open Big_int;;  let n = big_int_of_int 7;; let m = big_int_of_int 12;; | // System.Numerics.BigInteger: let n = 7I let m = 12I | -- Integer is arbitrary length type: let n = 7 let m = 12 |
+| arbitrary length integer operators |  | add_big_int n m sub_big_int n m mult_big_int n m div_big_int n m (* quotient *) mod_big_int n m  eq_big_int n m lt_big_int n m gt_big_int n m le_big_int n m ge_big_int n m | n + m n - m n * m n / m n % m  n = m n < m n < m n <= m n >= m | n + m n - m n * m div n m mod n m  n == m n < m n < m n <= m n >= m |
+| rational type |  |  |  | Ratio Integer |
+| rational construction |  |  |  | import Data.Ratio  1 % 7 |
+| rational decomposition |  |  |  | import Data.Ratio  numerator (1 % 7) denominator (1 % 7) |
+| complex type |  | Complex.t |  | Complex Double |
+| complex constants |  | Complex.zero Complex.one Complex.i |  |  |
+| complex operators |  | Complex.add z w;; Complex.sub z w;; Complex.mul z w;; Complex.div z w;; |  |  |
+| complex construction |  | {Complex.re=1.0; Complex.im=2.0} | System.Numerics.Complex(1.0, 2.0) | import Data.Complex  1 :+ 2.0 |
+| complex decomposition |  | let z = {Complex.re=1.0; Complex.im=2.0};;  z.Complex.re;; z.Complex.im;; Complex.arg z;; Complex.norm z;; Complex.conj z;; |  | import Data.Complex  realPart (1 :+ 2) imagPart (1 :+ 2) phase (1 :+ 2) magnitude (1 :+ 2) conjugate (1 :+ 2) |
+| random number uniform int, uniform float, normal float |  | Random.int 100 Random.float 1.0 none | let rnd = System.Random()  rnd.Next(0, 100) rnd.NextDouble() none | -- $ cabal install random import System.Random  getStdRandom (randomR (0, 99)) getStdRandom (randomR (0.0, 1.0)) none |
+| random seed set, get, restore |  | Random.init 17;; let seed = Random.get_state();; Random.set_state seed;; | let rnd = System.Random(17) none none | -- $ cabal install random import System.Random  setStdGen $ mkStdGen 17 seed <- getStdGen setStdGen seed |
+| bit operators |  | 1 lsl 4 1 lsr 4 1 land 3 1 lor 3 1 lxor 3 lnot 1 | 1 <<< 4 1 >>> 4 1 &&& 3 1 \|\|\| 3 1 ^^^ 3 ~~~ 1 | import Data.Bits  x = 1 :: Integer y = 3 :: Integer  shiftL x 4 shiftR x 4 x .&. y x .\|. y xor x y complement x |
+| binary, octal, and hex literals |  | 0b101010 0o52 0x2a | 0b101010 0o52 0x2a | none 052 0x2a |
+| radix |  |  |  |  |
+| strings |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| string type   | string | string | string | String |
+| string literal   | "Hello, World!" | "Hello, World!" | "Hello, World!" | "Hello, World!" |
+| newline in literal |  | no | yes | no |
+| literal escapes | \000 \a \b \f \n \r \t \v \040 | \b \n \r \t \" \' \\ \ooo \xhh | \b \n \r\ t \" \' \\ \uhhhh \Uhhhhhhhh | \a \b \f \n \r \t \v \" \& \' \\ \oo... \d... \xh...  Octal, decimal, and hex escapes denote Unicode characters and can contain anywhere from 1 to 7 digits. The max values are \o4177777, \1114111, and \x10ffff. The \& escape does not represent a character, but can separate a numeric backslash escape sequence from a following digit. |
+| format string |  |  | sprintf "foo %s %d %.2f" "bar" 7 3.1415 | import Text.Printf  printf "foo %s %d %.2f" "bar" 7 3.1415 |
+| concatenate   | "Hello" ^ ", " ^ "World!" | "Hello" ^ ", " ^ "World!" | "Hello" + ", " + "World!" | "Hello" ++ ", " ++ "World!" |
+| replicate   |  | String.make 80 '-' | String.replicate 80 "-" | concat ( replicate 80 "-" ) |
+| translate case to upper, to lower |  | String.uppercase "hello" String.lowercase "HELLO" | "hello".ToUpper() "HELLO".ToLower() | import Data.Char  map toUpper "hello" map toLower "HELLO" |
+| capitalize   |  | String.capitalize "hello" |  |  |
+| trim both sides, left, right |  | String.trim " hello " | " hello ".Trim() " hello".TrimStart() "hello ".TrimEnd() |  |
+| pad on left, on right |  |  | "hello".PadLeft(10, ' ') "hello".PadRight(10, ' ') |  |
+| number to string |  | "two: " ^ string_of_int 2 "pi: " ^ float_of_string 3.14 | "two: " + string 2 "pi: " + string 3.14 | "two: " ++ (show 2) "pi: " ++ (show 3.14) |
+| string to number | Int.toString 3 Real.toString 3.14 | 7 + int_of_string "12" 73.9 +. float_of_string ".037" | 7 + int "12" 73.9 + float ".037 | 7 + (read "12")::Integer 73.9 + (read "0.037")::Double raises exception if string doesn't completely parse |
+| join   |  |  | System.String.Join(" ", ["do"; "re"; "mi"]) |  |
+| split   |  |  | "do re mi".Split(' ') |  |
+| character type   | char | char | char | Char |
+| character literal | #"h" | 'h' | 'h' | 'h' |
+| length   | size "hello" | String.length "hello" | "hello".Length | length "hello" |
+| index of substring |  |  | "hello".IndexOf("hell") |  |
+| extract substring | substring ("hello",0,4) | String.sub "hello" 0 4 | "hello".Substring(0, 4) | drop 0 (take 4 "hello") |
+| extract character | String.sub ("hello", 0) | "hello".[0] | "hello".[0] | "hello" !! 0 |
+| chr and ord | ord #"a" chr 97 | Char.code 'a' Char.chr 97 | int 'a' char 97 | Char.ord 'a' Char.chr 97 |
+| dates and time |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| date and time types |  |  |  | ClockTime CalendarTime TimeDiff |
+| current date and time |  |  |  | import Time  t <- getClockTime |
+| current unix epoch |  | open Unix;;  (* float: *) time();; |  | import System.Time  getClockTime >>= (\(TOD sec _) -> return sec) |
+| arrays |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| literal |  |  |  |  |
+| size |  |  |  |  |
+| lookup |  |  |  |  |
+| update |  |  |  |  |
+| out-of-bounds |  |  |  |  |
+| lists |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| literal | [1, 2, 3] | [1; 2; 3] | [1; 2; 3] | [1, 2, 3] |
+| empty list   |  | [] |  | [] |
+| empty list test |  | let list = [1; 2; 3];;  list == [] |  | let list = [1, 2, 3]  list == [] null list |
+| cons   | 1 :: [2, 3] | 1 :: [2; 3] | 1 :: [2; 3] | 1 : [2, 3] |
+| head   | List.hd [1, 2, 3] | List.hd [1; 2; 3] | List.head [1; 2; 3] | head [1, 2, 3] |
+| tail   | List.tl [1, 2, 3] | List.tl [1; 2; 3] | List.tail [1; 2; 3] | tail [1, 2, 3] |
+| head and tail of empty list |  | exceptions |  | exceptions |
+| length   | List.length [1, 2, 3] | List.length [1; 2; 3] | List.length [1; 2; 3] | length [1, 2, 3] |
+| nth element   | List.nth ([1, 2, 3], 0) | List.nth [1; 2; 3] 0 | List.nth [1; 2; 3] 0 | [1, 2, 3] !! 0 |
+| element index |  |  |  | import Data.list  -- Just 1: elemIndex 8 [7, 8, 9]  -- Nothing: elemIndex 10 [7, 8, 9] |
+| update |  |  |  |  |
+| concatenate two lists, list of lists | [1, 2] @ [3, 4] List.concat [[1, 2], [3, 4]] | [1; 2] @ [3; 4] List.append [1; 2] [3; 4]  List.concat [[1; 2]; [3; 4]] | [1; 2] @ [3; 4] List.append [1; 2] [3; 4]  List.concat [[1; 2]; [3; 4]] | [1, 2] ++ [3, 4]  concat [[1, 2], [3, 4]] |
+| last and butlast |  |  |  | last [1, 2, 3] init [1, 2, 3] |
+| take   |  |  |  | take 2 [1, 2, 3] |
+| drop   |  |  |  | drop 2 [1, 2, 3] |
+| iterate | fun f i = print ((Int.toString i) ^ "\n"); List.app f [1, 2, 3]; | let f i =   print_endline (string_of_int i);;  List.iter f [1; 2; 3];; | let f i =   System.Console.WriteLine(string i)  List.iter f [1; 2; 3] | mapM_ print [1, 2, 3] |
+| reverse   | List.rev [1, 2, 3] | List.rev [1; 2; 3] | List.rev [1; 2; 3] | reverse [1, 2, 3] |
+| sort |  | List.sort min [1; 3; 2; 4] List.sort max [1; 3; 2; 4] | List.sort [1; 3; 2; 4] | import Data.List  sort [1, 3, 2, 4] |
+| map | List.map (fn (x) => x + 2) [1, 2, 3]; | List.map (( * ) 2) [1; 2; 3] | List.map (( * ) 2) [1; 2; 3] | map (\x -> x * x) [1, 2, 3] |
+| filter   | List.filter (fn (x) => x > 2) [1, 2, 3]; | List.filter ((<) 2) [1; 2; 3] | List.filter ((<) 2) [1; 2; 3] | filter (\x -> x > 2) [1, 2, 3] |
+| fold from left | List.foldl (op +) 0 [1, 2, 3]; | List.fold_left (+) 0 [1; 2; 3] | List.fold (-) 0 [1; 2; 3] | foldl (+) 0 [1, 2, 3] |
+| fold from right   |  | List.fold_right (-) [1; 2; 3] 0 | List.foldr (op -) 0 [1, 2, 3]; | foldr (-) 0 [1, 2, 3] |
+| membership   |  | List.mem 3 [1; 2; 3] |  | elem 3 [1, 2, 3] |
+| universal test   |  | List.for_all (fun x -> x > 2) [1; 2; 3];; | List.forall (fun x -> x > 2) [1; 2; 3] | all (\x -> x > 2) [1, 2, 3] |
+| existential test   |  | List.exists (fun x -> x > 2) [1; 2; 3];; | List.exists (fun x -> x > 2) [1; 2; 3] | any (\x -> x > 2) [1, 2, 3] |
+| zip lists |  | (* list of tuples *) List.combine [1; 2; 3] ['a'; 'b'; 'c'] |  | -- list of tuples: zip [1, 2, 3] ['a', 'b', 'c'] |
+| tuples |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| literal | (1, "hello", true) | (1, "hello", true) | (1, "hello", true) | (1, "hello", True) |
+| lookup | #1 (1, "hello", true) | match (1, "hello", true) with _, x, _ -> x | match (1, "hello", true) with _, x, _ -> x | (\(a, _, _) -> a) (1, "hello", True) |
+| pair lookup | #1 (12,"December") #2 (12,"December") | fst (12, "December") snd (12, "December") | fst (12, "December") snd (12, "December") | fst (12, "December") snd (12, "December") |
+| dictionaries |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| functions |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| define function | fun average a b = ( a + b ) / 2.0; | let average a b = ( a +. b ) /. 2.0;; | let average a b = ( a + b ) / 2.0 | average a b = (a + b) / 2.0 |
+| invoke function |  | (* 4.5: *) average 1.0 2.0 +. 3.0;;  (* 3.0: *) average 1.0 (2.0 +. 3.0);; | // 4.5: average 1.0 2.0 + 3.0  // 3.0: average 1.0 (2.0 + 3.0) | -- 4.5: average 1 2 + 3  -- 3.0: average 1 (2 + 3) average 1 $ 2 + 3 |
+| named parameter |  | let subtract ~m ~s = m - s;;  subtract ~s: 3 ~m: 7;; |  | none |
+| named parameter default value |  | let logarithm ?(base = (exp 1.0)) x = log x /. (log base);;  logarithm 2.718;; logarithm ~base: 2.0 10.0;; |  | none |
+| piecewise defined function | val to_s = fn Red => "red"   \| Green => "green"   \| Blue => "blue"; | let to_s = function Red -> "red"   \| Green -> "green"   \| Blue -> "blue";; |  | to_s Red = "red" to_s Green = "green" to_s Blue = "blue" |
+| recursive function | fun range a b =   if a > b then []   else a :: range (a + 1) b; | let rec range a b = if a > b then [] else a :: range (a+1) b;; |  | range a b = if a > b then [] else a : range (a+1) b |
+| mutually-recursive-functions |  | let rec even n = if n = 0 then true else odd (n-1) and odd n = if n = 0 then false else even (n-1);; |  |  |
+| anonymous function | fn x => fn y => (x + y) / 2.0 | fun x -> fun y -> (x +. y) /. 2.0 | fun x -> fun y -> (x + y) / 2.0 | \x y -> (x+y) / 2.0 |
+| infix operator in prefix position | (op * ) (3, 4) | ( * ) 3 4;; |  | ( * ) 3 4 |
+| function in infix position |  | none |  | add x y = x + y 3 ‘add` 4 |
+| currying | un plus x y = x + y; val plus2 = plus 2; plus2 7; | let plus2 = (+) 2;; |  | plus2 = (+) 2 |
+| composition |  |  |  | f x = x + 2 g x = x * 3 (f . g ) 4 |
+| function composition operator | fun double x = 2 * x; val quadruple = double o double; | none |  | double x = 2 * x quadruple x = double . double |
+| lazy evaluation |  | let arg1 x y = x;;  arg1 7 (lazy (1/0) );; |  | lazy evaluation is default: arg1 x y = x  arg1 7 (error "bam!") |
+| strict evaluation |  | default behavior | default behavior | arg1 x y = seq y x  arg1 7 (error "bam!") |
+| execution control |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| if | f x > 0 then   print "pos\n" else   (); | if x > 0 then   print_endline "pos";; | if x > 0 then   printfn "pos" | if x > 0   then putStrLn "pos"   else return () |
+| if else-if else | if x > 0 then print "pos" else if x < 0 then print "neg" else print "zero"; | if x > 0 then   print_endline "pos" else   if x < 0 then     print_endline "neg"   else     print_endline "zero";; | if x > 0 then   printfn "pos" else   if x < 0 then     printfn "neg"   else     printfn "zero" | if x > 0   then putStrLn "pos"   else if x < 0     then putStrLn "neg"     else putStrLn "zero" |
+| sequencing |  | print_endline "one"; print_endline "two"; print_endline "three";; | printfn "one" printfn "two" printfn "three" | do   putStrLn "one"   putStrLn "two"   putStrLn "three" |
+| while |  | let i = ref 0;;  while !i < 10 do   print_endline (string_of_int !i);   i := !i + 1 done;; | let i = ref 0  while !i < 10 do   printfn "%d" !i   i := !i + 1 |  |
+| for |  | for i = 1 to 10 do   let s = string_of_int i in   print_endline s done;; |  |  |
+| for in reverse |  | for i = 10 downto 1 do   let s = string_of_int i in   print_endline s done;; |  |  |
+| list iteration |  | none |  |  |
+| loop |  | let rec loop i =   if i <= 10 then begin     print_endline (string_of_int i);     loop (i+1)   end in loop 0;; |  |  |
+| exceptions |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| raise error |  | raise (Failure "bam!");; or failwith "bam!";; |  | error "bam!" |
+| handle error |  | let x = try 1 / 0 with Division_by_zero -> 0;; |  |  |
+| type of exceptions |  | exn |  |  |
+| user defined exception |  | exception Foo of string;; raise (Foo "invalid input");; |  |  |
+| standard exceptions |  | Division_by_zero Failure string Not_found Invalid_argument string Match_failure (string, int, int) Assert_failure (string, int, int) Out_of_memory Stack_overflow |  |  |
+| assert |  | assert(1 = 0);; |  |  |
+| concurrency |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| file handles |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| standard file handles |  | stdin stdout stderr | stdin stdout stderr | import System.Posix.IO  stdInput stdOutput stdError |
+| read line from stdin |  | let line = read_line();; |  | line <- getLine |
+| end-of-file behavior |  | raises End_of_file |  | when last data is returned, hIsEOF will return True. Reading after end-of-file throws an exception. |
+| chomp |  |  |  |  |
+| write line to stdout |  | print_endline "lorem ipsum";; | printfn "lorem ipsum" | putStrLn "lorem ipsum" |
+| write formatted string to stdout |  |  |  |  |
+| open file for reading |  | let f = open_in "/etc/passwd";; |  | import System.IO  f <- openFile "/etc/hosts" ReadMode |
+| open file for writing |  | let f = open_out "/tmp/ocaml.out";; |  | import System.IO  f <- openFile "/tmp/test" WriteMode |
+| open file for appending |  |  |  | import System.IO  f <- openFile "/tmp/err.log" AppendMode |
+| close file |  |  |  | import System.IO  hClose f |
+| i/o errors |  |  |  |  |
+| read line | fun displayFile(file: string) =   let     val f = TextIO.openIn file     fun iter(s: string option) =     case s of     NONE =>       (TextIO.closeIn f)     \| SOME(line) =>       (print line;       iter(TextIO.inputLine f))   in     iter(TextIO.inputLine f)   end displayFile("/etc/passwd"); | let ic = open_in "/etc/passwd" in let line = input_line ic in print_endline line;; |  | import IO  readAndPrintLines h = do   eof <- hIsEOF h   if eof     then return ()     else do       line <- hGetLine h       putStrLn line       readAndPrintLines h  main = do   h <- openFile "/etc/passwd" ReadMode   readAndPrintLines h |
+| iterate over file by line |  |  |  |  |
+| read file into array of strings |  |  |  |  |
+| read file into string |  |  |  |  |
+| write string |  |  |  |  |
+| write line | val file = "/tmp/test-sml"; val f = TextIO.openOut file; TextIO.output(f, "hello out\n"); TextIO.closeOut f; | open Printf let oc = open_out "/tmp/test-ocaml" in fprintf oc "hello out\n"; close_out oc;; |  | s = "hello out\n" f = "/tmp/test-haskell" main = writeFile f s |
+| flush file handle |  |  |  |  |
+| end-of-file test |  |  |  |  |
+| get and set filehandle position |  |  |  |  |
+| files |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| file test, regular file test |  | open Unix  try Some (stat "/etc/hosts") with   Unix_error (ENOENT, _, _) -> None  (stat "/etc/hosts").st_kind = S_REG |  | import System  Directory.doesFileExist "/etc/hosts"  import Control.Monad import System.Posix.Files  liftM isRegularFile (getFileStatus "/etc/hosts") |
+| file size |  | (stat "/etc/hosts").st_size |  | import Control.Monad import System.Posix.Files  liftM fileSize (getFileStatus "/etc/hosts") |
+| is file readable, writable, executable |  | open Unix  try access "/tmp/bar" [R_OK]; true with   Unix.Unix_error (EACCES, _, _) -> false;; try access "/tmp/bar" [W_OK]; true with   Unix.Unix_error (EACCES, _, _) -> false;; try access "/tmp/bar" [X_OK]; true with   Unix.Unix_error (EACCES, _, _) -> false;; |  | import Control.Monad  liftM readable   (getPermissions "/etc/hosts") liftM writable   (getPermissions "/etc/hosts") liftM executable   (getPermissions "/etc/hosts") |
+| set file permissions |  | open Unix  chmod "/tmp/foo" 0o755 |  | import System.Posix.Files  setFileMode "/tmp/foo" ownerModes setFileMode "/tmp/foo" groupReadMode setFileMode "/tmp/foo" groupExecuteMode setFileMode "/tmp/foo" otherReadMode setFileMode "/tmp/foo" otherExecuteMode |
+| copy file, remove file, rename file |  | open Unix  ?? unlink "/tmp/foo" rename "/tmp/bar" "/tmp/foo" |  | import System.Directory  copyFile "/tmp/foo" "/tmp/bar" removeFile "/tmp/foo" renameFile "/tmp/bar" "/tmp/foo" |
+| create symlink, symlink test, readlink |  | open Unix  symlink "/etc/hosts" "/tmp/hosts" (lstat "/tmp/hosts").st_kind = S_LNK readlink "/tmp/hosts" |  | import System.Posix.Files  createSymbolicLink "/etc/hosts" "/tmp/hosts" ?? readSymbolicLink "/tmp/hosts" |
+| generate unused file name |  | open Filename  (* prefix and suffix: *) temp_file "foo" ".txt" |  |  |
+| directories |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| build pathname |  | open Filename  concat "/etc" "hosts" |  | import System.FilePath ((</>))  let path = "/etc" </> "hosts" |
+| dirname and basename |  | open Filename  dirname "/etc/hosts" basename "/etc/hosts" |  | import System.FilePath  takeFileName "/etc/hosts" takeDirectory "/etc/hosts" |
+| iterate over directory by file |  |  |  | import System  -- returns IO [FilePath] Directory.getDirectoryContents "/etc" |
+| make directory |  | (* opam install fileutils *) open FileUtil  mkdir ~parent:true "/tmp/foo/bar" |  | import System.Directory  createDirectoryIfMissing True   "/tmp/foo/bar" |
+| remove empty directory |  | open Unix  rmdir "/tmp/foodir" |  | import System.Directory  removeDirectory "/tmp/foodir" |
+| remove directory and contents |  |  |  | import System.Directory  removeDirectoryRecursive "/tmp/foodir" |
+| directory test |  |  |  | import System  Directory.doesDirectoryExist "/tmp" |
+| temporary directory |  |  |  |  |
+| processes and environment |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| command line arguments |  | for i = 0 to Array.length Sys.argv - 1 do   print_endline i Sys.argv.(i) done |  | import System  printArgs args = do   if length args == 0     then return ()     else do       putStrLn (head args)       printArgs (tail args) main = do   a <- getArgs   printArgs a |
+| program name   |  |  |  | import System  s <- getProgName |
+| getopt |  |  |  |  |
+| get and set environment variable   |  | open Unix  s = getenv "HOME" putenv "PATH" "/bin" |  | import System.Posix.Env  s <- getEnv "HOME" putEnv "PATH=/bin" |
+| get pid, parent pid |  | open Unix  let pid = getpid() let ppid = getppid() |  | import System.Posix.Process  pid <- getProcessID ppid <- getParentProcessID |
+| get user id and name |  | let uid = getuid() let username =   (getpwuid (getuid())).pw_name |  | import System.Posix.User  uid <- getRealUserID username <- getLoginName |
+| exit   |  | exit 0  exit 1 |  | import System.Exit  exitWith ExitSuccess  to return nonzero status: exitWith (ExitFailure 1) |
+| set signal handler   |  |  |  |  |
+| external command   |  |  |  | import System.Cmd  rawSystem "ls" ["-l", "/tmp"] |
+| escaped external command   |  |  |  |  |
+| backticks   |  |  |  |  |
+| libraries and namespaces |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| namespace example |  |  |  | Foo/Bar.hs module Foo.Bar where   data Baz = Baz   say Baz = putStrLn "hello"  Main.hs module Main where import Foo.Bar baz = Baz main = say baz  to compile and run $ ghc -c Foo/Bar.hs $ ghc Main.hs $ ./Main hello |
+| namespaces |  |  |  | values, constructors, type variables, type constructors, type classes, modules |
+| file name restrictions |  | module Foo.Bar must be in Foo.ml |  | module Foo.Bar must be in Foo/Bar.hs |
+| namespace |  | open Graphics;; |  | import Data.Bytestring |
+| namespace creation |  | put code in file MODULE_NAME.ml |  |  |
+| namespace alias |  | module Gr = Graphics;; |  | import qualified Data.Bytestring as B |
+| namespace separator |  | . |  | . |
+| subnamespace |  | in A.ml: module B = sig   val display_instruction : unit -> unit end = struct   let msg = "attack"   let display_instruction () = print_endline msg end in client source: A.B.display_instruction;; |  |  |
+| package manager setup |  | do this once: $ opam init  for each shell session: $ eval $(opam config env) |  |  |
+| package manager search; install; list installed |  | $ opam search utop $ opam install utop $ opam list --installed |  | $ cabal list parsec $ cabal install parsec $ cabal list --installed |
+| compile app using package |  |  |  |  |
+| user-defined types |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| type synonym   | type name = string; | type name = string;; | type name = string | type Name = String |
+| sum type | datatype color = Red \| Green \| Blue; | type color = Red \| Green \| Blue;;  let col = Red;;  (* evaluates to true: *) col < Green;; | type color = Red \| Green \| Blue  let col = Red  // evaluates to true: col < Green | data Color = Red \| Green \| Blue  col = Red  -- this won’t compile: col < Green |
+| tuple product type with one field | datatype special_int = SpecialInt of int;  val x = SpecialInt 7; | type special_int = SpecialInt of int;;  let n = SpecialInt 7;; | type special_int = SpecialInt of int  let n = SpecialInt 7 | data SpecialIntType = SpecialInt Integer  n = SpecialInt 7 |
+| tuple product type with two fields | datatype int_pair = IntPair of int * int;  val y = IntPair (7, 11); | type int_pair = IntPair of int * int;;  let p = IntPair (7, 11);; | type int_pair = IntPair of int * int  let p = IntPair (7, 11) | data IntPairType = IntPair Integer Integer  p = IntPair 7 11 |
+| record product type | type customer = {id:int, name:string, address:string} | type customer = {   id: int;   name: string;   address: string };; | type customer = {   id: int;   name: string;   address: string } | data CustomerType = Customer {   customerId :: Integer,   name :: String,   address :: String } |
+| record product type literal | {id=7, name="John", address="Topeka, KS"} | let cust = {   id=7;   name="John";   address="Topeka, KS" };; | {id=7; name="John"; address="Topeka, KS"} | Customer {   customerId=7,   name="John",   address="Topeka, KS" } |
+| generic type | datatype ('a, 'b) twosome =   Twosome of 'a * 'b;  val z = Twosome ("pi", 3.14); | type ('a, 'b) twosome =   Twosome of 'a * 'b;;  let p = Twosome ("pi", 3.14);; | type ('a, 'b) twosome =   Twosome of 'a * 'b  let p = Twosome ("pi", 3.14) | data TwosomeType a b = Twosome a b  p = Twosome ("pi", 3.14) |
+| recursive type | datatype binary_tree =   Leaf of int   \| Tree of binary_tree * binary_tree; | type binary_tree =   \| Leaf of int   \| Tree of binary_tree * binary_tree;; | type binary_tree =   \| Leaf of int   \| Tree of binary_tree * binary_tree | data BinaryTree = Leaf Integer \| Tree BinaryTree BinaryTree |
+| pattern match sum type | val c = Red;  case c of Red => "red"   \| Blue => "blue"   \| Green => "green"; | let col = Red;;  let s = match col with   \| Red -> "red"   \| Blue -> "blue"   \| Green -> "green";; |  | c = Red case c of Red -> "red"   Green -> "green"   Blue -> "blue" |
+| pattern match product type |  |  |  |  |
+| pattern match guard | none; use if | match i with j when i < 0 -> -j \| j -> j;; |  | none, use if or piecewise function definition |
+| pattern match catchall | fun to_s c = case c of Red => "red" \| _ => "not red"; | let to_s c = match c with Red -> "red" \| _ -> "not red";; to_s Green;; |  | c = Green case c of Red -> "red"; _ -> "not red" |
+| objects |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| class definition |  | class counter = object   val mutable n = 0   method incr = n <- n+1   method get = n end;; |  |  |
+| object creation |  | let c = new counter;; |  |  |
+| method invocation |  | c#incr;; c#get;; |  |  |
+| field access |  | none |  |  |
+| inheritance and polymorphism |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| overload function |  |  |  |  |
+| inheritance |  |  |  |  |
+| net and web |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| unit test |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| debugging and profiling |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| repl |  |  |  |  |
+|  | sml | ocaml | f# | haskell |
+| invoke repl | $ sml | $ ocaml  Use this if you want history: $ rlwrap ocaml  The utop toplevel, which can be installed via opam, also provides history. | Mono: $ fsharpi  In visual studio, highlight code and press ALT+ENTER. | $ ghci |
+| repl limitations |  |  |  | Must use let to define values and functions; when defining functions with multiple equations the equations must be separated by semicolons; the clauses of case/of statements must be separated by semicolons; it is not possible to define data types. |
+| repl last value | it | none | it | it |
+| help |  | none |  | :? |
+| quit |  | ^D | #quit;; |  |
+| inspect type |  | repl displays the type of any expression entered |  | let a = 3 :type a |
+| inspect namespace |  | module Unix = Unix;; |  |  |
+| load source file | use "hello.ml"; | #use "hello";; |  | :edit hello.hs :load hello |
+| load package |  | consider adding to .ocamlinit: #use "topfind";; # thread;; #require "core";; open Core.Std;; |  |  |
+| search path |  | #directory "libdir";; |  |  |
+| set search path on command line |  | ocaml -Ilibdir |  |  |
 
-### [grammar and invocation](#grammar-invocation-note)
-
-|            | sml | ocaml | f# | haskell |
-| :-------------: | :-------------: | :-----: | :---: | :---: |
-
-[interpreter](#interpreter-note)$ echo 'print\_endline "hello"' > hello.ml
-
-$ ocaml hello.ml · $ cat <<EOF > hello.fs
-
-module hello
-
-let main = printfn "hello"
-
-EOF
-
-$ fsharpi --quiet --exec hello.fs · $ echo 'main = putStrLn "hello"' > hello.hs
-
-$ runghc hello.hs
+##### Formatted - no table
 
 [shebang](#shebang-note)$ cat <<EOF > hello.ml
 
