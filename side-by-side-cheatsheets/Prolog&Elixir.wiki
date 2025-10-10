@@ -1,0 +1,738 @@
+{| class="wikitable" 
+|- style="text-align:center;"
+! 
+! style="text-decoration:underline; color:#669EFF;" | prolog
+! style="text-decoration:underline; color:#669EFF;" | elixir
+|-
+| version used<br />
+| SWI Prolog 7.2
+| 1.3
+|-
+| show version<br />
+| $ swipl --version
+| $ elixir -v
+|- style="text-align:center;"
+| grammar and invocation
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| hello world
+| $ cat ./hello.pl<br />hello :-<br />  format('Hello, World!~n'),<br />  halt.<br /><br />$ swipl -q -t hello -f ./hello.pl<br />Hello, World!
+| $ cat hello.exs<br />IO.puts "Hello, World!"<br /><br />$ elixir hello.exs<br />Hello, World!
+|-
+| compiler
+| 
+| 
+|-
+| bytecode compiler<br />
+| 
+| 
+|-
+| interpreter
+| $ cat arg-analyzer<br />main :-<br />  current_prolog_flag(argv, Args),<br />  (   Args = [Arg]<br />  -> format('argument was: ~w~n', [Arg])<br />  ;   format('Usage: arg-analyzer ARG~n') ).<br /><br />:- main, halt(0).<br /><br />$ swipl -s arg-analyzer foo<br />argument was: foo
+| 
+|-
+| shebang
+| $ cat arg-analyzer<br />#!/usr/bin/env swipl<br /><br />main :-<br />  current_prolog_flag(argv, Args),<br />  (   Args = [Arg]<br />  -> format('argument was: ~w~n', [Arg])<br />  ;   format('Usage: arg-analyzer ARG~n') ).<br /><br />:- main, halt(0).<br /><br />$ ./arg-analyzer foo<br />argument was: foo
+| 
+|-
+| repl<br />
+| $ swipl
+| $ iex
+|-
+| block delimiters
+| ( )
+| <syntaxhighlight lang="elixir" highlight="2,5-7">do ; end</syntaxhighlight>
+|-
+| statement terminator<br />
+| .
+| print("Hello, world!")
+|-
+| end-of-line comment<br />
+| % a comment
+| </syntaxhighlight>
+|-
+| multiple line comment
+| /* comment line<br />comment line */
+| 
+|- style="text-align:center;"
+| variables and expressions
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| variable identifier
+| upper case letter followed by alphanumeric characters and underscores
+| 
+|-
+| write once variable
+| 
+| 
+|-
+| assignment
+| X = 3.<br />4 = Y.
+| x = 3
+|-
+| parallel assignment
+| (X, Y) = (1, 2).<br />[X, Y] = [1, 2].<br />{X, Y} = {1, 2}.<br />foo(X, Y) = foo(1, 2).
+| {x, y} = {1, 2}<br />[z, w] = [1, 2]
+|-
+| non-referential identifier
+| lower case letter followed by alphanumeric characters; can also include underscore: _
+| 
+|-
+| quoted non-referential identifier
+| any printable characters inside single quotes; use backslash to escape a single quote.
+| 
+|-
+| conditional expression
+| X = -3, (<br />  X > 0 -> Result = 1;<br />  X = 0 -> Result = X;<br />  X < 0 -> Result = -1<br />).
+| if x > 0 do 1 else if x < 0 do -1 else 0 end end
+|-
+| case
+| (  X = 1 -> Result = true<br />;  X = 0 -> Result = false ).<br />or:<br />member(X-Result, [<br />  1-true,<br />  0-false]).
+| case x do<br />  1 -> true<br />  0 -> false<br />end
+|- style="text-align:center;"
+| arithmetic and logic
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| true and false<br />
+| true fail
+| true false
+|-
+| falsehoods<br />
+| 
+| false nil
+|-
+| logical operators
+| , ; ?? ??
+| # arguments must be boolean:<br />and or not<br /><br /># arguments of any type permitted:<br />&& || !
+|-
+| short circuit operators
+| 
+| and or && ||
+|-
+| relational operators
+| =:= \= < > =< >=
+| 
+|-
+| arithmetic expression
+| X is 2 + 2.
+| 2 + 2
+|-
+| arithmetic operators<br /><br />addition, subtraction, multiplication, float division, integer division, remainder
+| + - * / // mod
+| + - * / div rem<br /><br />div and rem are functions, not operators
+|-
+| integer division
+| X is 7 // 3.
+| div 7, 3<br />div(7, 3)
+|-
+| integer division by zero
+| zero_divisor error
+| raises ArithmeticError
+|-
+| float division<br />
+| X is 7 / 3.
+| 7 / 3
+|-
+| float division by zero
+| zero_divisor error
+| raises ArithmeticError
+|-
+| power<br />
+| X is 2**32.
+| :math.pow(2, 32)
+|-
+| sqrt<br />
+| X is sqrt(2).
+| :math.sqrt(2)
+|-
+| sqrt -1<br />
+| arithmetic evaluation error: undefined
+| raises ArithmeticError
+|-
+| transcendental functions
+| exp log<br />sin cos tan<br />asin acos atan<br />atan2
+| :math.exp :math.log<br />:math.sin :math.cos :math.tan<br />:math.asin :math.acos :math.atan<br />:math.atan2
+|-
+| float truncation
+| truncate round floor ceiling
+| # 2, 3:<br />trunc(2.7)<br />round(2.7)<br /><br /># 2.0, 3.0:<br />Float.floor(2.7)<br />Float.ceil(2.7)
+|-
+| absolute value
+| X is abs(-3).<br />X is abs(-3.2).
+| abs(-3)<br />abs(-3.2)
+|-
+| integer overflow
+| 
+| 
+|-
+| float literal with exponent
+| 2.0e2<br />-2.0E-2
+| 2.0e2<br />-2.0e-2
+|-
+| random number
+| X is random(100).
+| :random.uniform<br />:random.uniform(100)
+|-
+| random seed<br />
+| set_random(seed(17)).
+| :random.seed(17, 17, 17)
+|-
+| result of not seeding
+| seeded using /dev/random or system time
+| 
+|-
+| bit operators
+| X is 5 << 1.<br />X is 5 >>  1.<br />X is 5 /\ 1.<br />X is 5 \/ 1.<br />X is 5 xor 1.<br />X is \ 5.
+| import Bitwise<br /><br />5 <<< 1<br />5 >>> 1<br />5 &&& 1<br />5 ||| 1<br />5 ^^^ 1<br />~~~5
+|-
+| binary, octal, and hex literals
+| 2'101010<br />8'52<br />16'2A
+| 0b101010<br />0o52<br />0x2A
+|- style="text-align:center;"
+| strings
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| string literal
+| list of characters:<br />"don't say \"no\""<br /><br />quoted atom:<br />'don\'t say "no"'
+| "don't say \"no\""
+|-
+| newline in literal
+| yes; and \n notation can also be used
+| 
+|-
+| character escapes
+| \a \b \e \f \n \r \s \t \v \xhh…\ \uhhhh \Uhhhhhhhh \ooo \\ \' \"
+| \" \' \\ \a \b \d \e \f \n \r \s \t \v \0<br />\xhh \uhhhh \u{h…}
+|-
+| concatenate
+| append("one ", "two ", Y), append(Y, "three", X).
+| "one " <> "two " <> "three"
+|-
+| replicate<br />
+| list from single characters:<br />length(Hbar, 80), maplist(=('-'), Hbar).
+| :binary.copy("-", 80)
+|-
+| trim<br />both sides, left side, right side
+| normalize_space(string(Result), " lorem ").
+| String.trim(" lorem ")
+|-
+| pad<br />on right, on left, both sides
+| format(string(Result), 'lorem~10|', []).<br />Result = "lorem     ".<br /><br />format(string(Result), '~tlorem~10|', []).<br />Result = "   &nbsp lorem".<br /><br />format(string(Result), '~tlorem~t~10|', []).<br />Result = "  lorem   ".
+| String.pad_leading("lorem", 10, ["$"])<br />String.pad_trailing("lorem", 10, ["$"])
+|-
+| number to string
+| number_string(8, String).<br />number_string(3.14, String).
+| "value: " <> Integer.to_string(8)<br />"value: " <> Float.to_string(3.14)
+|-
+| string to number
+| number_string(N, "12"), X is 7 + N.<br />number_string(N, "0.039"), X is 73.9 + N.
+| 7 + String.to_integer("12")<br />73.9 + String.to_float("0.039")
+|-
+| non-referential identifier to string
+| name(foo, X).
+| Atom.to_string(:foo)
+|-
+| string to non-referential identifier
+| string_to_atom("foo", X).
+| String.to_atom("foo")
+|-
+| translate case<br />to upper, to lower
+| upcase_atom('lorem', X).<br />downcase_atom('LOREM', X).
+| String.downcase("LOREM")<br />String.upcase("lorem")<br />String.capitalize("lorem")
+|-
+| split
+| split_string("foo bar baz", " ", "", Result).
+| String.split("foo bar baz")<br />Regex.split(~r/ /, "foo bar baz")
+|-
+| join<br />
+| atomics_to_string(["foo", "bar", "baz"], " ", Result).
+| String.join(["foo", "bar", "baz"])
+|-
+| character literal<br />
+| 0'A (character code 65)<br />'A' (atom 'A')
+| 'A'
+|-
+| string length
+| length("hello", X).<br /><br />atom_length('hello', X).
+| String.length("hello")
+|-
+| index of substring<br />first, last
+| sub_string("foo bar bar", CharsBefore, _, _, "bar"),<br />Index is CharsBefore + 1.<br />all solutions enumerated on backtracking: CharsBefore = 4, Index = 5 ; CharsBefore = 8, Index = 9
+| # {4, 3}:<br />:binary.match("foo bar baz", "bar")<br /><br />??
+|-
+| extract substring
+| sub_string("foo bar bar", 4, 3, _, Result).
+| String.slice("foo bar baz", 5..3)
+|-
+| chr and ord
+| char_code(X, 65).<br />char_code('A', X).
+| List.to_string([65])<br />Enum.at('A', 0)
+|- style="text-align:center;"
+| regular expressions
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| literal
+| 
+| ~r/lorem|ipsum/
+|-
+| character class abbreviations
+| 
+| . \d \D \h \H \s \S \v \V \w \W
+|-
+| anchors<br />
+| 
+| ^ $ \A \b \B \G \z \Z
+|-
+| match test
+| 
+| Regex.match?(~r/.*1999/, "it's 2000")<br />String.match?("it's 2000", ~r/.*1999/)
+|-
+| case insensitive match test
+| 
+| Regex.match?(~r/lorem/i, "Lorem")<br />String.match?("Lorem", ~r/lorem/i)
+|-
+| modifiers
+| 
+| u i s m x f U
+|-
+| substitution
+| 
+| Regex.replace(~r/mi/, "do re mi mi mi", "ma")<br />String.replace("do re mi mi mi", ~r/mi/, "ma")
+|-
+| match, prematch, postmatch
+| 
+| 
+|-
+| group capture
+| 
+| 
+|-
+| named group capture
+| 
+| 
+|-
+| scan
+| 
+| 
+|-
+| backreference in match
+| 
+| 
+|-
+| backreference in substitution
+| 
+| 
+|- style="text-align:center;"
+| dates and time
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| current date/time
+| get_time(TimeStamp), stamp_date_time(TimeStamp, date(YY,MM,DD,H,M,S,_,_,_), local).<br />get_time(TimeStamp), stamp_date_time(TimeStamp, date(YY,MM,DD,H,M,S,_,_,_), 'UTC').
+| DateTime.utc_now
+|- style="text-align:center;"
+| lists
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| list literal
+| [1, 2, 3]
+| [1, 2, 3]
+|-
+| cons
+| X = [4 | [3, 2, 1]].
+| [4 | [3, 2, 1]]
+|-
+| head
+| [X | _] = [1, 2, 3].
+| hd([1, 2, 3])<br />[head | _] = [1, 2, 3]<br />List.first [1, 2, 3]
+|-
+| tail
+| [_ | X] = [1, 2, 3].
+| tl([1, 2, 3])<br />[_ | tail] = [1, 2, 3]
+|-
+| length
+| length([1, 2, 3], X).
+| length([1, 2, 3])<br />Enum.count([1, 2, 3])
+|-
+| append
+| append([1, 2], [3, 4], List).
+| [1, 2] ++ [3, 4]
+|-
+| sort
+| sort([1, 3, 2, 4], X).
+| Enum.sort([1, 3, 2, 4])
+|-
+| reverse
+| reverse([1, 2, 3, 4], X).
+| Enum.reverse([1, 2, 3, 4])
+|-
+| membership
+| member(1, [1, 2, 3]).
+| Enum.member?([1, 2, 3], 1)
+|-
+| zip
+| 
+| Enum.zip([1, 2, 3], ["a", "b", "c"])
+|-
+| map
+| 
+| Enum.map([1, 2, 3], fn x -> x * x end)
+|-
+| filter
+| 
+| Enum.filter([1, 2, 3], fn x -> x > 2 end)
+|-
+| reduce
+| 
+| # 2:<br />Enum.reduce([1, 2, 3], fn x, y -> x - y end)
+|- style="text-align:center;"
+| tuples
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| tuple literal
+| (1, "hello", 3.14) or any arbitrary function symbol
+| {1, "foo", 3.14}
+|-
+| tuple element access
+| arg(2, tuple(1, "foo", 3.14), Element).<br />Element = "foo".
+| # "foo":<br />elem({1, "foo", 3.14}, 2)<br /><br /># 1, "bar", 3.14}:<br />put_elem({1, "foo", 3.14}, 2, "bar")
+|-
+| tuple length
+| functor(tuple(1, "foo", 3.14), _, Length).<br />Length = 3.
+| tuple_size({1, "foo", 3.14})
+|- style="text-align:center;"
+| dictionaries
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| literal
+| 
+| %{"t" => 1, "f" => 0}
+|-
+| size
+| 
+| 
+|-
+| lookup
+| 
+| 
+|-
+| update
+| 
+| 
+|-
+| missing key behavior
+| 
+| 
+|-
+| is key present
+| 
+| 
+|-
+| iterate
+| 
+| 
+|- style="text-align:center;"
+| algebraic data types
+| 
+| 
+|-
+| record
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|- style="text-align:center;"
+| functions
+| 
+| 
+|-
+| function definition
+| factorial(0,1).<br />factorial(N, F) :- N1 is N - 1, factorial(N1, F1), F is N * F1.
+| def factorial(0), do: 1<br />def factorial(n), do: n * factorial(n - 1)
+|-
+| function definition with guards
+| factorial(N, F) :- N > 0, N1 is N - 1, factorial(N1, F1), F is N * F1.<br />factorial(0, 1).
+| def factorial(n) when n > 0, do: n * factorial(n - 1)<br />def factorial(0), do: 1
+|-
+| anonymous function
+| 
+| fn(x, y) -> x + y end
+|-
+| piecewise defined anonymous function
+| 
+| 
+|- style="text-align:center;"
+| execution control
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| if
+| ( X = 0 -> format('no hits~n')<br />; X = 1 -> format('one hit~n')<br />; X > 1 -> format('~w hits~n', [X]) ).
+| if x == 0 do<br />  IO.puts "no hits"<br />else<br />  IO.puts "hits"<br />end
+|-
+| for
+| between(1, 10, X), writeln(X), false; true.
+| for x <- 1..10, do: IO.puts(x)
+|-
+| try/catch
+| X = 0,<br />catch(Y is 7 div X,<br />  error(evaluation_error(zero_divisor), _),<br />  Y is 0).
+| try do<br />  div(7, 0)<br />  :ok<br />catch<br />  _, _ -> :failed<br />end
+|-
+| receive message
+| 
+| receive do<br />  {:ok, some_value} -> :yay<br />  {:error, val} when val > 0 -> :meh<br />  {:error, oh_no} -> :aw<br />end
+|-
+| spawn process
+| 
+| pid = spawn(fn -> :ok end)
+|-
+| send message
+| 
+| send(pid, :hello)
+|-
+| list processes
+| 
+| Process.list
+|- style="text-align:center;"
+| file handles
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| read line from stdin
+| 
+| # returns newline terminated string:<br />s = IO.gets("> ")
+|-
+| write line to stdout
+| 
+| 
+|-
+| write line to stderr
+| 
+| 
+|-
+| open file for reading
+| open('foo.txt', read, Fd).
+| {:ok, f} = File.open("/etc/hosts", [:read])
+|-
+| read line
+| 
+| 
+|-
+| read character
+| get_char(X).
+| 
+|-
+| read term
+| read(X).
+| 
+|-
+| open file for writing
+| open('foo.txt', write, Fd).
+| {:ok, f} = File.open("/tmp/foo.txt", [:write])
+|-
+| open file for appending
+| 
+| 
+|-
+| write line
+| 
+| 
+|-
+| write character
+| put_char("A").<br />put_char(65)
+| 
+|-
+| write term
+| X = hello, write(X).
+| 
+|-
+| printf
+| format('foo: ~s ~2f ~w~n', ["bar", 3.1415, 7]).
+| 
+|-
+| close file
+| close(Fd).
+| :ok = File.close(f)
+|- style="text-align:center;"
+| files
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| file test, regular file test
+| 
+| File.regular? "/etc/hosts"
+|-
+| file size
+| 
+| 
+|- style="text-align:center;"
+| directories
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| build pathname
+| 
+| 
+|-
+| dirname and basename
+| 
+| File.dirname "/etc/hosts"<br />File.basename "/etc/hosts"
+|-
+| absolute pathname
+| 
+| File.absname "/etc/hosts"
+|-
+| glob paths
+| 
+| 
+|-
+| make directory
+| 
+| File.mkdir_p("/tmp/foo/bar")
+|-
+| directory test
+| 
+| File.dir? "/tmp"
+|- style="text-align:center;"
+| processes and environment
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| command line arguments
+| binds Argv to list of atoms representing command line args:<br />current_prolog_flag(argv, Argv).
+| System.argv
+|-
+| program name
+| 
+| 
+|-
+| exit
+| halt(1).
+| System.halt
+|- style="text-align:center;"
+| libraries and namespaces
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| load file
+| ways to load file data.pl:<br />[data].<br />['data.pl'].<br />consult(data)
+| 
+|-
+| define namespace
+| :- module(factorial, [factorial/1]).
+| defmodule Factorial do<br />end
+|-
+| compile namespace
+| 
+| c("factorial.ex")
+|-
+| use function in namespace
+| 
+| Factorial.fact 7
+|- style="text-align:center;"
+| reflection
+| 
+| 
+|- style="text-align:center;"
+| 
+| prolog
+| elixir
+|-
+| inspect namespace
+| 
+| 
+|- style="text-align:center;"
+| repl
+| 
+| 
+|-
+| help
+| help.<br />apropos(keyword).
+| h
+|-
+| clear variable
+| 
+| 
+|-
+| clear all variables
+| 
+| 
+|-
+| display processes
+| 
+| 
+|- style="text-align:center;"
+| 
+| __________________________________________________________________________
+| _________________________________________________________
+|}
