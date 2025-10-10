@@ -1,5 +1,12 @@
 default:
   @just --list
 
-build-html-from-mediawiki:
+to-html-from-mediawiki:
   pandoc -f mediawiki --syntax-highlighting "pygments" -o "Prolog&Elixir.html" "Prolog&Elixir.wiki" #--syntax-highlighting breezedark theme not working on windows
+
+to-typst-from-mediawiki:
+  pandoc -f mediawiki -o "Prolog&Elixir.typ" "Prolog&Elixir.wiki"
+
+to-html-from-typst:
+  typst compile --features html "Prolog&Elixir.typ" "Prolog&Elixir.html"
+
